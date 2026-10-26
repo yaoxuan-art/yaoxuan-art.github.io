@@ -1,23 +1,20 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-page-node-id="qyrZpXwiso8zPXYMP4bI9W"><head data-page-node-id="daaNIpSRELciZNRizgqTvV">
-<meta charset="utf-8" data-page-node-id="h1LK0wF2XqG3d1fpMybCxV">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" data-page-node-id="fje3DnoAadNkQZU0k4ZBuE">
-<meta name="theme-color" content="#0a0a0b" data-page-node-id="lFBmIDD21ffwPlk6I7Jot9">
-<title data-page-node-id="lDUWT597fdyEwtLAb2FVFi">姚轩 — 插画作品集 / Illustration Portfolio</title>
-<meta name="description" content="个人插画作品集 — 下载完整 PDF 作品集，合作请邮件联系。" data-page-node-id="dAoO21GqxlIuATjlwqCUZf">
-<style data-page-node-id="LKYyhWlWEiezOBFQgLhGCD">
-  /* ========================================
-     配色 —— 深色素雅画廊风
-     ======================================== */
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0b">
+<title>姚轩 — 插画作品集 / Illustration Portfolio</title>
+<meta name="description" content="个人插画作品集 — 下载完整 PDF 作品集，合作请邮件联系。">
+<style>
   :root{
-    --bg:#0a0a0b;           /* 近黑背景，让插画发光 */
-    --bg-soft:#121214;      /* 卡片/悬浮层 */
-    --ink:#f5f5f5;          /* 主文字：米白 */
-    --ink-2:#a0a0a8;        /* 次文字：暖灰 */
-    --ink-3:#6b6b74;        /* 辅助文字 */
-    --line:rgba(255,255,255,.10);  /* 细线 */
-    --accent:#8a8a92;       /* 低饱和强调色：暖银灰 */
-    --accent-2:#6b7b8e;      /* 冷灰蓝，呼应作品 */
+    --bg:#0a0a0b;
+    --bg-soft:#121214;
+    --ink:#f5f5f5;
+    --ink-2:#a0a0a8;
+    --ink-3:#6b6b74;
+    --line:rgba(255,255,255,.10);
+    --accent:#8a8a92;
   }
 
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
@@ -31,158 +28,107 @@
     overflow-x:hidden;
   }
 
-  /* 极简顶栏 */
+  /* 顶栏 - 品牌信息在左上角 */
   .nav{
     position:fixed;top:0;left:0;right:0;z-index:50;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:20px 28px;
-    font-size:12px;letter-spacing:.04em;
-    color:var(--ink-2);
+    display:flex;align-items:flex-start;justify-content:space-between;
+    padding:24px 28px;
     background:linear-gradient(to bottom,var(--bg),rgba(10,10,11,.85) 60%,transparent);
     pointer-events:none;
   }
   .nav > *{pointer-events:auto}
-  .nav .brand{font-weight:500;color:var(--ink);font-size:13px;letter-spacing:.02em}
+  .nav .brand{
+    display:flex;flex-direction:column;gap:4px;
+  }
+  .nav .brand .name{
+    font-size:14px;font-weight:500;color:var(--ink);letter-spacing:.02em;
+  }
+  .nav .brand .title{
+    font-size:11px;color:var(--ink-2);letter-spacing:.04em;
+  }
+  .nav .brand .en{
+    font-size:10px;color:var(--ink-3);letter-spacing:.02em;
+  }
   .nav .nav-right{display:flex;align-items:center;gap:28px}
-  .nav .nav-right a{color:var(--ink-2);text-decoration:none;transition:color .25s}
+  .nav .nav-right a{color:var(--ink-2);text-decoration:none;transition:color .25s;font-size:12px}
   .nav .nav-right a:hover{color:var(--ink)}
 
   /* 主容器 */
   main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 28px calc(100px + env(safe-area-inset-bottom))}
   @media(min-width:768px){main{padding:0 48px calc(100px + env(safe-area-inset-bottom))}}
 
-  /* ---------- Hero ---------- */
-  .hero{
-    min-height:92vh;
+  /* ---------- 笑脸作品网格 ---------- */
+  .smiley-section{
+    min-height:100vh;
     display:flex;flex-direction:column;justify-content:center;align-items:center;
-    text-align:center;
-    padding:120px 0 80px;
+    padding:100px 0 60px;
     animation:rise 1s cubic-bezier(.2,.7,.3,1) both;
   }
-  .hero .kicker{
-    font-size:10px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;
-    color:var(--ink-3);margin-bottom:24px;
+
+  .smiley-grid{
+    display:grid;
+    grid-template-columns:repeat(14, 1fr);
+    grid-auto-rows:1fr;
+    gap:8px;
+    width:100%;
+    max-width:700px;
+    aspect-ratio:1;
   }
-  .hero h1{
-    font-size:clamp(42px,10vw,80px);
-    line-height:1.05;font-weight:600;letter-spacing:-.04em;
+
+  .smiley-cell{
+    position:relative;
+    border-radius:6px;
+    overflow:hidden;
+    background:var(--bg-soft);
+    cursor:pointer;
+    transition:transform .35s ease,box-shadow .35s ease;
   }
-  .hero .subtitle{
-    margin-top:22px;font-size:15px;color:var(--ink-2);line-height:1.6;
-    max-width:420px;
+  .smiley-cell:hover{
+    transform:scale(1.05);
+    box-shadow:0 12px 40px -12px rgba(0,0,0,.8);
+    z-index:10;
   }
-  .hero .subtitle .en{
-    display:block;margin-top:8px;font-size:12px;color:var(--ink-3);letter-spacing:.02em;
+  .smiley-cell img{
+    display:block;width:100%;height:100%;object-fit:cover;
   }
+
+  /* 笑脸布局 - 17张作品 */
+  /* 左眼 - 4张 (2x2) */
+  .cell-1{grid-column:2 / 4;grid-row:2 / 4}
+  .cell-2{grid-column:4 / 6;grid-row:2 / 4}
+  .cell-3{grid-column:2 / 4;grid-row:4 / 6}
+  .cell-4{grid-column:4 / 6;grid-row:4 / 6}
+
+  /* 右眼 - 4张 (2x2) */
+  .cell-5{grid-column:10 / 12;grid-row:2 / 4}
+  .cell-6{grid-column:12 / 14;grid-row:2 / 4}
+  .cell-7{grid-column:10 / 12;grid-row:4 / 6}
+  .cell-8{grid-column:12 / 14;grid-row:4 / 6}
+
+  /* 鼻子 - 2张 */
+  .cell-9{grid-column:6 / 8;grid-row:6 / 8}
+  .cell-10{grid-column:8 / 10;grid-row:6 / 8}
+
+  /* 脸颊 - 2张 */
+  .cell-11{grid-column:1 / 3;grid-row:7 / 9}
+  .cell-12{grid-column:13 / 15;grid-row:7 / 9}
+
+  /* 嘴巴 - 5张 (弧形) */
+  .cell-13{grid-column:3 / 5;grid-row:9 / 11}
+  .cell-14{grid-column:5 / 7;grid-row:10 / 12}
+  .cell-15{grid-column:7 / 9;grid-row:10 / 12}
+  .cell-16{grid-column:9 / 11;grid-row:10 / 12}
+  .cell-17{grid-column:11 / 13;grid-row:9 / 11}
 
   /* 滚动提示 */
   .scroll-hint{
-    position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+    margin-top:40px;
     display:flex;flex-direction:column;align-items:center;gap:8px;
     color:var(--ink-3);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
     animation:float 2.5s ease-in-out infinite;
   }
   .scroll-hint::after{
     content:"";width:1px;height:28px;background:linear-gradient(to bottom,var(--ink-3),transparent);
-  }
-  @keyframes float{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
-
-  /* ---------- 作品区标题 ---------- */
-  .section-title{
-    display:flex;align-items:flex-end;justify-content:space-between;
-    padding:0 0 32px;border-bottom:1px solid var(--line);
-    margin-bottom:48px;
-  }
-  .section-title h2{font-size:18px;font-weight:500;letter-spacing:.02em}
-  .section-title span{font-size:11px;color:var(--ink-3);letter-spacing:.04em}
-
-  /* ========================================
-     不规则尺寸作品网格 —— 错落画廊布局
-     ======================================== */
-  .gallery{
-    display:grid;
-    grid-template-columns:repeat(12, 1fr);
-    grid-auto-rows:80px;
-    gap:16px;
-    animation:rise 1s cubic-bezier(.2,.7,.3,1) .15s both;
-  }
-  @media(max-width:768px){
-    .gallery{grid-template-columns:repeat(6,1fr);grid-auto-rows:70px;gap:12px}
-  }
-
-  .piece{
-    position:relative;
-    border-radius:8px;
-    overflow:hidden;
-    background:var(--bg-soft);
-    cursor:pointer;
-    transition:transform .45s cubic-bezier(.2,.7,.3,1),box-shadow .45s ease;
-  }
-  .piece:hover{transform:translateY(-4px) scale(1.005);box-shadow:0 24px 60px -24px rgba(0,0,0,.7)}
-  .piece img{display:block;width:100%;height:100%;object-fit:cover}
-  .piece .overlay{
-    position:absolute;inset:0;
-    background:linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 55%);
-    opacity:0;transition:opacity .35s ease;
-    display:flex;align-items:flex-end;padding:18px;
-  }
-  .piece:hover .overlay{opacity:1}
-  .piece .overlay span{color:var(--ink);font-size:12px;font-weight:500;letter-spacing:.02em}
-
-  /* 不规则尺寸 —— 改这里控制每件作品的大小和位置 */
-  .piece.p-1{grid-column:1 / 8;grid-row:1 / 8}
-  .piece.p-2{grid-column:8 / 13;grid-row:1 / 5}
-  .piece.p-3{grid-column:8 / 13;grid-row:5 / 8}
-  .piece.p-4{grid-column:1 / 5;grid-row:8 / 13}
-  .piece.p-5{grid-column:5 / 9;grid-row:8 / 14}
-  .piece.p-6{grid-column:9 / 13;grid-row:8 / 13}
-
-  /* p-2、p-3 横图完整显示，不裁切 */
-  .piece.p-2 img,.piece.p-3 img{object-fit:contain;padding:8px}
-
-  @media(max-width:768px){
-    .piece.p-1{grid-column:1 / 7;grid-row:1 / 7}
-    .piece.p-2{grid-column:1 / 7;grid-row:7 / 10}
-    .piece.p-3{grid-column:1 / 7;grid-row:10 / 13}
-    .piece.p-4{grid-column:1 / 7;grid-row:13 / 17}
-    .piece.p-5{grid-column:1 / 7;grid-row:17 / 21}
-    .piece.p-6{grid-column:1 / 7;grid-row:21 / 25}
-  }
-
-  /* 更多作品可以在这里继续添加尺寸类 */
-
-  /* ---------- 独立作品模块 ---------- */
-  .work-module{
-    position:relative;
-    border-radius:12px;
-    overflow:hidden;
-    background:var(--bg-soft);
-    cursor:pointer;
-    transition:transform .45s cubic-bezier(.2,.7,.3,1),box-shadow .45s ease;
-    animation:rise 1s cubic-bezier(.2,.7,.3,1) .12s both;
-  }
-  .work-module:hover{transform:translateY(-4px);box-shadow:0 28px 70px -30px rgba(0,0,0,.7)}
-  .work-module img{display:block;width:100%;height:auto}
-  .work-module .module-info{
-    position:absolute;inset:0;
-    background:linear-gradient(to top,rgba(0,0,0,.55) 0%,transparent 55%);
-    display:flex;flex-direction:column;justify-content:flex-end;padding:28px;
-  }
-  .work-module .module-info h2{margin:0;font-size:24px;font-weight:500;color:var(--ink);letter-spacing:.02em}
-  .work-module .module-info span{margin-top:6px;font-size:11px;color:var(--ink-2);letter-spacing:.06em;text-transform:uppercase}
-
-  /* 横向模块 —— 适合宽图合集 */
-  .work-module.wide{margin-bottom:24px}
-
-  /* 方形模块 —— 适合单张作品 */
-  .work-module.square{
-    max-width:720px;
-    margin:0 auto 24px;
-  }
-
-  @media(max-width:768px){
-    .work-module .module-info h2{font-size:20px}
-    .work-module .module-info{padding:20px}
   }
 
   /* ---------- PDF 下载区 ---------- */
@@ -281,123 +227,152 @@
     cursor:pointer;transition:all .25s;
   }
   .lightbox .lb-close:hover{background:rgba(255,255,255,.1);color:var(--ink)}
+
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   @keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style>
-<style id="__dm_no_drag_style__" data-page-node-id="3IOHmSrX2dIkFKWTvd9y8r">* { -webkit-user-drag: none !important; }</style><style id="__dm_bindable_badge_style__" data-page-node-id="FwfVZadkn4TzOlf78XArxq">[data-sp-bindable="database"]{outline:1px dashed #0088ff;outline-offset:2px;border-radius:4px;}[data-sp-bindable="database"] *{pointer-events:none !important;transition:none !important;animation:none !important;}[data-sp-bindable="database"]{transition:none !important;animation:none !important;}</style></head>
-<body data-page-node-id="aQDoZpiCnjPYWKIhUullYx" style="position: relative;">
 
-<nav class="nav" data-page-node-id="Xn6fzHbD0NLvITcJJhxptu">
-  <span class="brand" data-page-node-id="F3VGx2jp1qW6ynP5NwnD12" style="white-space: pre-wrap;">Yaoxuan's  artwork</span>
-  <div class="nav-right" data-page-node-id="rcEDQuKEMm8LrwULr3CfN0">
-    
-    <a href="#about" data-page-node-id="c2wBy6n4Jcfktb4dEMxyBS" style="white-space: pre-wrap;">2026</a>
-    
+  /* 移动端适配 */
+  @media(max-width:768px){
+    .smiley-grid{
+      grid-template-columns:repeat(10, 1fr);
+      gap:6px;
+    }
+    /* 移动端简化布局 */
+    .cell-1{grid-column:1 / 3;grid-row:1 / 3}
+    .cell-2{grid-column:3 / 5;grid-row:1 / 3}
+    .cell-3{grid-column:1 / 3;grid-row:3 / 5}
+    .cell-4{grid-column:3 / 5;grid-row:3 / 5}
+    .cell-5{grid-column:7 / 9;grid-row:1 / 3}
+    .cell-6{grid-column:9 / 11;grid-row:1 / 3}
+    .cell-7{grid-column:7 / 9;grid-row:3 / 5}
+    .cell-8{grid-column:9 / 11;grid-row:3 / 5}
+    .cell-9{grid-column:4 / 6;grid-row:5 / 7}
+    .cell-10{grid-column:6 / 8;grid-row:5 / 7}
+    .cell-11{grid-column:1 / 3;grid-row:6 / 8}
+    .cell-12{grid-column:9 / 11;grid-row:6 / 8}
+    .cell-13{grid-column:2 / 4;grid-row:8 / 10}
+    .cell-14{grid-column:4 / 6;grid-row:9 / 11}
+    .cell-15{grid-column:6 / 8;grid-row:9 / 11}
+    .cell-16{grid-column:8 / 10;grid-row:9 / 11}
+    .cell-17{grid-column:2 / 4;grid-row:8 / 10}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="brand">
+    <span class="name">姚轩 / Yao</span>
+    <span class="title">独立插画师 / 视觉创作者</span>
+    <span class="en">Independent illustrator & visual artist</span>
+  </div>
+  <div class="nav-right">
+    <a href="#about">2026</a>
   </div>
 </nav>
 
-<main data-page-node-id="JNwRHZlTB9ps62Y77R7gEx">
+<main>
 
-  <!-- ========== Hero ========== -->
-  <section class="hero" data-page-node-id="44GmDWnV3qmtehtqJKQd9j">
-    <p class="kicker" data-page-node-id="RbZMDIQ0hiMcNJVbB9DnrZ" style="">ILLUSTRATION PORTFOLIO</p>
-    <h1 data-page-node-id="F1NJsgSueMw0GzlIa6FapA" style="font-size: 72px; color: rgb(231, 230, 230);">姚 轩 / Yao
-</h1>
-    <p class="subtitle" data-page-node-id="aWq2HcQ7f7ExTYhzzABc1D">
-      独立插画师 / 视觉创作者
-      <span class="en" data-page-node-id="UEoIPVcwBoe0HpzTnwrYkS">Independent illustrator &amp; visual artist based in China</span>
-    </p>
-    <div class="scroll-hint" data-page-node-id="cWc51rLIwWiAorP5UhqJmm">Scroll</div>
+  <!-- ========== 笑脸作品网格 ========== -->
+  <section class="smiley-section">
+    <div class="smiley-grid">
+      <!-- 左眼 -->
+      <div class="smiley-cell cell-1" onclick="openLightbox('images/new-321515.jpg')"><img src="images/new-321515.jpg" alt="作品 32"></div>
+      <div class="smiley-cell cell-2" onclick="openLightbox('images/new-331515.jpg')"><img src="images/new-331515.jpg" alt="作品 33"></div>
+      <div class="smiley-cell cell-3" onclick="openLightbox('images/new-341515.jpg')"><img src="images/new-341515.jpg" alt="作品 34"></div>
+      <div class="smiley-cell cell-4" onclick="openLightbox('images/new-351515.jpg')"><img src="images/new-351515.jpg" alt="作品 35"></div>
+
+      <!-- 右眼 -->
+      <div class="smiley-cell cell-5" onclick="openLightbox('images/new-361515.jpg')"><img src="images/new-361515.jpg" alt="作品 36"></div>
+      <div class="smiley-cell cell-6" onclick="openLightbox('images/new-371515.jpg')"><img src="images/new-371515.jpg" alt="作品 37"></div>
+      <div class="smiley-cell cell-7" onclick="openLightbox('images/new-381515.jpg')"><img src="images/new-381515.jpg" alt="作品 38"></div>
+      <div class="smiley-cell cell-8" onclick="openLightbox('images/new-391515.jpg')"><img src="images/new-391515.jpg" alt="作品 39"></div>
+
+      <!-- 鼻子 -->
+      <div class="smiley-cell cell-9" onclick="openLightbox('images/new-401515.jpg')"><img src="images/new-401515.jpg" alt="作品 40"></div>
+      <div class="smiley-cell cell-10" onclick="openLightbox('images/new-411515.jpg')"><img src="images/new-411515.jpg" alt="作品 41"></div>
+
+      <!-- 脸颊 -->
+      <div class="smiley-cell cell-11" onclick="openLightbox('images/new-421515.jpg')"><img src="images/new-421515.jpg" alt="作品 42"></div>
+      <div class="smiley-cell cell-12" onclick="openLightbox('images/new-431515.jpg')"><img src="images/new-431515.jpg" alt="作品 43"></div>
+
+      <!-- 嘴巴 -->
+      <div class="smiley-cell cell-13" onclick="openLightbox('images/new-441515.jpg')"><img src="images/new-441515.jpg" alt="作品 44"></div>
+      <div class="smiley-cell cell-14" onclick="openLightbox('images/new-451515.jpg')"><img src="images/new-451515.jpg" alt="作品 45"></div>
+      <div class="smiley-cell cell-15" onclick="openLightbox('images/new-461515.jpg')"><img src="images/new-461515.jpg" alt="作品 46"></div>
+      <div class="smiley-cell cell-16" onclick="openLightbox('images/new-471515.jpg')"><img src="images/new-471515.jpg" alt="作品 47"></div>
+      <div class="smiley-cell cell-17" onclick="openLightbox('images/new-481515.jpg')"><img src="images/new-481515.jpg" alt="作品 48"></div>
+    </div>
+
+    <div class="scroll-hint">Scroll</div>
   </section>
 
   <!-- ========== PDF 下载 ========== -->
-  <!-- 改这里：把 portfolio.pdf 换成你的作品集 PDF -->
-  <section class="download" id="download" data-page-node-id="EL3LnWkn6Eag3eyLIwiYmi">
-    <p data-page-node-id="6M5rmBmQra1Q6AUNNrBwUN">完整作品集</p>
-    <h3 data-page-node-id="v9EcCxGKlFPD1fe0FlQ6zj">PDF 作品集</h3>
-    <a class="btn-pdf" href="portfolio.pdf" target="_blank" rel="noopener noreferrer" data-page-node-id="BzX1iflTLnsH4Lsw4BveJA">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="zUbFJp6IpNrAQBBaRI7hqG">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" data-page-node-id="VfllZwCghzIZ7tNYa1AgEF"></path>
-        <polyline points="14 2 14 8 20 8" data-page-node-id="foACzS1mRBPFkU6AT0ZrIl"></polyline>
-        <line x1="16" y1="13" x2="8" y2="13" data-page-node-id="qbbs8AOBJOucynFOmDjhAD"></line>
-        <line x1="16" y1="17" x2="8" y2="17" data-page-node-id="x7aBcD1EfGhIjKlMnOpQrS"></line>
-        <polyline points="10 9 9 9 8 9" data-page-node-id="TuVwXyZaBcDeFgHiJkLmNo"></polyline>
+  <section class="download" id="download">
+    <p>完整作品集</p>
+    <h3>PDF 作品集</h3>
+    <a class="btn-pdf" href="portfolio.pdf" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+        <polyline points="10 9 9 9 8 9"></polyline>
       </svg>
       View Portfolio PDF
     </a>
   </section>
 
-  <!-- ========== 作品区 ========== -->
-  <section class="work-module wide" id="works" onclick="openLightbox('images/works-collage-wide.jpg')" data-page-node-id="GnBYH3QN5TuZ2DCbrB5jfC">
-    <img src="images/works-collage-wide.jpg" alt="2026 作品合集" data-page-node-id="09dUVBoA3KBniPSAZTc3a3">
-    <div class="module-info" data-page-node-id="U8298RSmQ3iPSJ6oWo7ueW">
-      <h2 data-page-node-id="ZJhHC0rl3igTXu9sYHDaUj">2026</h2>
-      <span data-page-node-id="GtROgfLwof0I1hq2wrouLs">插画合集 / Collection</span>
-    </div>
-  </section>
-
-  <section class="work-module square" onclick="openLightbox('images/single-work-2026.jpg')" data-page-node-id="oJxBsoAjeE4EVG40vEoRBF">
-    <img src="images/single-work-2026.jpg" alt="未命名作品 129" data-page-node-id="bnUIYTZWC9A4ucQHM5xm6S">
-    <div class="module-info" data-page-node-id="olpVQFgfiWNTrqyKPqhlYn">
-      
-      <span data-page-node-id="IINJ9NDRZsXJ9DCvYDdhGq">2026 · Procreate</span>
-    </div>
-  </section>
-
   <!-- ========== 关于 ========== -->
-  <section class="about" id="about" data-page-node-id="5xADQgJoncN6HX7EiDl33V">
-    <div data-page-node-id="xICvh1oLXtk0fDqCYT50Oj">
-      <h2 data-page-node-id="LeSXp56cbLEVLUOtAcUPMg">关于 / About</h2>
-      <p data-page-node-id="YjXZC61SibyEHCOyTxD9xV" style="white-space: pre-wrap;">2023 年开始，我尝试用 Procreate 去释放自己的想法。到 2026.10.19，我积累了一定的画面，希望大家也能在我的画面中找到一些自己的影子。我会持续更新画面作品集，谢谢喜欢和关注。</p>
-      <p class="en" data-page-node-id="hADu95sORsKZMujKZ1B6bq">I started using Procreate in 2023 to release what was in my head. By 2026.10.19 I've gathered a collection of works — I hope you can find a piece of yourself in these paintings too. I'll keep updating the portfolio. Thanks for your likes and follows.</p>
+  <section class="about" id="about">
+    <div>
+      <h2>关于 / About</h2>
+      <p>2023 年开始，我尝试用 Procreate 去释放自己的想法。到 2026.10.19，我积累了一定的画面，希望大家也能在我的画面中找到一些自己的影子。我会持续更新画面作品集，谢谢喜欢和关注。</p>
+      <p class="en">I started using Procreate in 2023 to release what was in my head. By 2026.10.19 I've gathered a collection of works — I hope you can find a piece of yourself in these paintings too. I'll keep updating the portfolio. Thanks for your likes and follows.</p>
     </div>
-    <div data-page-node-id="ZWQepvtLJYuZAEwlfIxcoG">
-      <h2 data-page-node-id="OWgmRywDaslfVn9eBrl30h">合作 / Collaboration</h2>
-      <p data-page-node-id="7P8ZKshGvn7njauWCw7URn">
-        欢迎插画委托、品牌合作、专辑封面、出版物配图等项目。沟通需求后我会提供报价与档期。
-      </p>
-      <p class="en" data-page-node-id="DDCm0iWDaHa4mH0725GFse">
-        Open for commissions, brand collaborations, album covers, and editorial illustrations.
-        Please email for rates and availability.
-      </p>
+    <div>
+      <h2>合作 / Collaboration</h2>
+      <p>欢迎插画委托、品牌合作、专辑封面、出版物配图等项目。沟通需求后我会提供报价与档期。</p>
+      <p class="en">Open for commissions, brand collaborations, album covers, and editorial illustrations. Please email for rates and availability.</p>
     </div>
   </section>
 
   <!-- ========== 联系方式 ========== -->
-  <footer id="contact" data-page-node-id="TCbAGVv0KeLVFCanSXRL0M">
-    <div class="top" data-page-node-id="ykWIcx1lI8vY0QI8jpQDv3">
-      <p data-page-node-id="smjBti8PjobcZVjUJpRbaQ">商务合作 / Business Inquiry</p>
-      <a href="mailto:1364795397@qq.com" data-page-node-id="Dh7rHgoVT7HVQGJG0JoqQc">1364795397@qq.com​</a>
+  <footer id="contact">
+    <div class="top">
+      <p>商务合作 / Business Inquiry</p>
+      <a href="mailto:1364795397@qq.com">1364795397@qq.com</a>
     </div>
 
-    <div class="contact-row" data-page-node-id="hLvimDroyBnR3FCQsQunNf">
-      <button class="contact-chip" type="button" data-copy="YXZK99072" data-page-node-id="k1zvRjQLq4vG7GMd1OQSQI">
-        <span class="chip-label" data-page-node-id="UCfsAmRB98je3rbHHughDb">微信 · WeChat</span>
-        <span class="chip-value" data-page-node-id="BBZlAJDyDWqGx69li9BEnP">YXZK99072</span>
+    <div class="contact-row">
+      <button class="contact-chip" type="button" data-copy="YXZK99072">
+        <span class="chip-label">微信 · WeChat</span>
+        <span class="chip-value">YXZK99072</span>
       </button>
-      <button class="contact-chip" type="button" data-copy="2695071052" data-page-node-id="iOZDqD8oXk6XanOtoYsYDu">
-        <span class="chip-label" data-page-node-id="98DYi4iEH4gvpKEfRDibqv">小红书 · RedNote</span>
-        <span class="chip-value" data-page-node-id="9ZR69gne4yTFBTuFnywLSq">2695071052</span>
+      <button class="contact-chip" type="button" data-copy="2695071052">
+        <span class="chip-label">小红书 · RedNote</span>
+        <span class="chip-value">2695071052</span>
       </button>
-      <a class="contact-chip" href="https://www.instagram.com/xyao_9872/" target="_blank" rel="noopener noreferrer" data-page-node-id="1xgIAnHG7EpwHUwjT9uSsh">
-        <span class="chip-label" data-page-node-id="i5PycNRL1k1OVIDLWmJUND">Instagram</span>
-        <span class="chip-value" data-page-node-id="Pei6fbdIYOwlsCDSA04Jtr">@xyao_9872</span>
+      <a class="contact-chip" href="https://www.instagram.com/xyao_9872/" target="_blank" rel="noopener noreferrer">
+        <span class="chip-label">Instagram</span>
+        <span class="chip-value">@xyao_9872</span>
       </a>
     </div>
 
-    <p class="copy" data-page-node-id="xgUpAamUFhjBJryADybDHF">© 2026 姚轩 · 中国</p>
+    <p class="copy">© 2026 姚轩 · 中国</p>
   </footer>
 
 </main>
 
 <!-- 灯箱 -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()" data-page-node-id="RCRJy77ogNSUVfFw2halA5">
-  <div class="lb-close" data-page-node-id="QtmnFbcw5duwNwYCqCRs4z">✕</div>
-  <img id="lightbox-img" src="images/single-work-2026.jpg" alt="" data-page-node-id="Stjw3R7b4kSfoc4KVltqMG">
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lb-close">✕</div>
+  <img id="lightbox-img" src="" alt="">
 </div>
 
-<script data-page-node-id="ryeXztWXrGerdfXZFFcTn4">
+<script>
 // 灯箱
 function openLightbox(src){
   document.getElementById('lightbox-img').src=src;
@@ -437,7 +412,5 @@ function closeLightbox(){
 })();
 </script>
 
-
-
-
-</body></html>
+</body>
+</html>
