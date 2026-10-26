@@ -59,20 +59,22 @@
 
   /* ---------- 笑脸作品网格 ---------- */
   .smiley-section{
-    min-height:100vh;
+    height:100vh;
     display:flex;flex-direction:column;justify-content:center;align-items:center;
-    padding:100px 0 60px;
+    padding:80px 20px 40px;
     animation:rise 1s cubic-bezier(.2,.7,.3,1) both;
+    overflow:hidden;
   }
 
   .smiley-grid{
     display:grid;
     grid-template-columns:repeat(12, 1fr);
     grid-auto-rows:1fr;
-    gap:12px;
-    width:100%;
-    max-width:600px;
-    aspect-ratio:1;
+    gap:8px;
+    width:auto;
+    height:auto;
+    max-width:calc(100vmin - 160px);
+    max-height:calc(100vmin - 160px);
   }
 
   .smiley-cell{
