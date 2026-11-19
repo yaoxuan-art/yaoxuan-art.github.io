@@ -62,6 +62,7 @@
   .nav .nav-right a,.nav .nav-right button{
     color:var(--ink-2);text-decoration:none;transition:color .25s;font-size:12px;
     background:none;border:none;cursor:pointer;font-family:inherit;
+    white-space:nowrap;flex-shrink:0;
   }
   .nav .nav-right a:hover,.nav .nav-right button:hover{color:var(--ink)}
 
@@ -71,6 +72,7 @@
     border:1px solid var(--line);
     font-size:12px;letter-spacing:.04em;
     transition:all .25s ease;
+    white-space:nowrap;
   }
   .nav .vote-btn:hover{
     background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.22);color:var(--ink);
@@ -589,11 +591,12 @@
     .cell-16{grid-column:8 / 10;grid-row:10 / 12}
     .cell-17{grid-column:10 / 12;grid-row:9 / 11}
 
-    .nav{padding:16px 20px}
+    .nav{padding:16px 16px}
     .nav .brand .name{font-size:13px}
     .nav .brand .title{font-size:10px}
     .nav .brand .en{font-size:9px}
-    .nav .nav-right{gap:14px}
+    .nav .nav-right{gap:10px}
+    .nav .vote-btn{padding:6px 12px}
     .scroll-hint{margin-top:18px}
 
     .vote-grid{grid-template-columns:repeat(3,1fr);gap:6px;padding:8px 16px 100px}
@@ -617,8 +620,8 @@
     <span class="en">Independent illustrator & visual artist</span>
   </div>
   <div class="nav-right">
-    <button class="vote-btn" id="vote-open-btn"><span class="vote-dot"></span>投票</button>
-    <button class="vote-btn" id="leaderboard-btn">排行榜</button>
+    <button class="vote-btn" id="vote-open-btn"><span class="vote-dot"></span>Vote</button>
+    <button class="vote-btn" id="leaderboard-btn">Rank</button>
     <a href="#about">2026</a>
   </div>
 </nav>
