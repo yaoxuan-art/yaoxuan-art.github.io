@@ -59,8 +59,28 @@
     font-size:10px;color:var(--ink-3);letter-spacing:.02em;
   }
   .nav .nav-right{display:flex;align-items:center;gap:28px}
-  .nav .nav-right a{color:var(--ink-2);text-decoration:none;transition:color .25s;font-size:12px}
-  .nav .nav-right a:hover{color:var(--ink)}
+  .nav .nav-right a,.nav .nav-right button{
+    color:var(--ink-2);text-decoration:none;transition:color .25s;font-size:12px;
+    background:none;border:none;cursor:pointer;font-family:inherit;
+  }
+  .nav .nav-right a:hover,.nav .nav-right button:hover{color:var(--ink)}
+
+  /* 投票按钮高亮 */
+  .nav .vote-btn{
+    padding:6px 16px;border-radius:999px;
+    border:1px solid var(--line);
+    font-size:12px;letter-spacing:.04em;
+    transition:all .25s ease;
+  }
+  .nav .vote-btn:hover{
+    background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.22);color:var(--ink);
+  }
+  .nav .vote-btn .vote-dot{
+    display:inline-block;width:6px;height:6px;border-radius:50%;
+    background:var(--ink);margin-right:6px;vertical-align:middle;
+    transition:background .25s;
+  }
+  .nav .vote-btn.has-votes .vote-dot{background:#e76f51}
 
   /* 主容器 */
   main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 28px calc(100px + env(safe-area-inset-bottom))}
@@ -106,27 +126,18 @@
   }
 
   /* 笑脸布局 - 17张正方形作品 */
-  /* 左眼 - 4张 (2x2) */
   .cell-1{grid-column:2 / 4;grid-row:2 / 4}
   .cell-2{grid-column:4 / 6;grid-row:2 / 4}
   .cell-3{grid-column:2 / 4;grid-row:4 / 6}
   .cell-4{grid-column:4 / 6;grid-row:4 / 6}
-
-  /* 右眼 - 4张 (2x2) */
   .cell-5{grid-column:8 / 10;grid-row:2 / 4}
   .cell-6{grid-column:10 / 12;grid-row:2 / 4}
   .cell-7{grid-column:8 / 10;grid-row:4 / 6}
   .cell-8{grid-column:10 / 12;grid-row:4 / 6}
-
-  /* 鼻子 - 2张 */
   .cell-9{grid-column:5 / 7;grid-row:6 / 8}
   .cell-10{grid-column:7 / 9;grid-row:6 / 8}
-
-  /* 脸颊 - 2张 */
   .cell-11{grid-column:1 / 3;grid-row:7 / 9}
   .cell-12{grid-column:11 / 13;grid-row:7 / 9}
-
-  /* 嘴巴 - 5张 (弧形) */
   .cell-13{grid-column:2 / 4;grid-row:9 / 11}
   .cell-14{grid-column:4 / 6;grid-row:10 / 12}
   .cell-15{grid-column:6 / 8;grid-row:10 / 12}
@@ -223,7 +234,7 @@
 
   footer .copy{font-size:11px;color:var(--ink-3);letter-spacing:.02em}
 
-  /* 灯箱 */
+  /* ---------- 原灯箱（首页笑脸点击查看大图） ---------- */
   .lightbox{
     position:fixed;inset:0;z-index:100;
     background:rgba(5,5,6,.96);
@@ -241,12 +252,314 @@
   }
   .lightbox .lb-close:hover{background:rgba(255,255,255,.1);color:var(--ink)}
 
+  /* ---------- 投票全屏视图 ---------- */
+  .vote-view{
+    position:fixed;inset:0;z-index:150;
+    background:var(--bg);
+    display:none;
+    flex-direction:column;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+  }
+  .vote-view.open{display:flex;animation:fadeIn .3s ease}
+
+  .vote-view-header{
+    position:sticky;top:0;z-index:10;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 28px;
+    background:linear-gradient(to bottom,var(--bg),rgba(10,10,11,.9) 70%,transparent);
+  }
+  .vote-view-header .title{
+    font-size:14px;font-weight:500;color:var(--ink);letter-spacing:.02em;
+  }
+  .vote-view-header .sub{
+    font-size:11px;color:var(--ink-3);margin-top:2px;
+  }
+  .vote-view-header .close-btn{
+    width:40px;height:40px;border-radius:50%;
+    border:1px solid var(--line);background:transparent;
+    color:var(--ink-2);font-size:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .25s;
+  }
+  .vote-view-header .close-btn:hover{background:rgba(255,255,255,.06);color:var(--ink)}
+
+  .vote-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    gap:8px;
+    padding:12px 28px 120px;
+    max-width:1000px;margin:0 auto;width:100%;
+  }
+  @media(min-width:768px){
+    .vote-grid{gap:12px;padding:12px 48px 120px}
+  }
+
+  .vote-thumb{
+    position:relative;border-radius:8px;overflow:hidden;
+    background:var(--bg-soft);cursor:pointer;
+    aspect-ratio:1;
+    transition:transform .25s ease;
+  }
+  .vote-thumb:hover{transform:scale(1.03)}
+  .vote-thumb img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+  /* 选中标记 — 右上角小数字 */
+  .vote-thumb .order-badge{
+    position:absolute;top:8px;right:8px;
+    width:26px;height:26px;border-radius:50%;
+    background:var(--ink);color:var(--bg);
+    display:none;align-items:center;justify-content:center;
+    font-size:13px;font-weight:700;
+  }
+  .vote-thumb.selected .order-badge{display:flex}
+
+  /* ---------- 投票大图预览（带勾选） ---------- */
+  .vote-lightbox{
+    position:fixed;inset:0;z-index:200;
+    background:rgba(5,5,6,.97);
+    display:none;
+    flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:60px 20px 20px;
+  }
+  .vote-lightbox.open{display:flex;animation:fadeIn .3s ease}
+
+  .vote-lightbox .vl-close{
+    position:absolute;top:24px;right:28px;
+    width:44px;height:44px;border-radius:50%;
+    border:1px solid var(--line);background:rgba(255,255,255,.04);
+    color:var(--ink-2);font-size:18px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .25s;z-index:5;
+  }
+  .vote-lightbox .vl-close:hover{background:rgba(255,255,255,.1);color:var(--ink)}
+
+  .vote-lightbox .vl-img-wrap{
+    position:relative;
+    max-width:100%;max-height:calc(100vh - 140px);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .vote-lightbox .vl-img-wrap img{
+    max-width:100%;max-height:calc(100vh - 140px);
+    object-fit:contain;border-radius:6px;
+    box-shadow:0 40px 80px -30px rgba(0,0,0,.8);
+  }
+
+  /* 左下角圆圈勾选 */
+  .vote-lightbox .check-circle{
+    position:absolute;bottom:16px;left:16px;
+    width:48px;height:48px;border-radius:50%;
+    border:2.5px solid rgba(255,255,255,.35);
+    background:rgba(0,0,0,.3);
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .25s ease;
+    pointer-events:auto;
+    z-index:5;
+  }
+  .vote-lightbox .check-circle:hover{
+    border-color:rgba(255,255,255,.7);
+    background:rgba(0,0,0,.5);
+    transform:scale(1.08);
+  }
+  .vote-lightbox .check-circle.checked{
+    border-color:var(--ink);
+    background:var(--ink);
+  }
+  .vote-lightbox .check-circle .check-mark{
+    color:var(--bg);font-size:22px;font-weight:700;
+    opacity:0;transform:scale(.5);
+    transition:opacity .2s,transform .2s;
+  }
+  .vote-lightbox .check-circle.checked .check-mark{
+    opacity:1;transform:scale(1);
+  }
+  /* 勾选时的编号 */
+  .vote-lightbox .check-circle .check-num{
+    position:absolute;
+    color:var(--bg);font-size:18px;font-weight:700;
+    opacity:0;transition:opacity .2s;
+  }
+  .vote-lightbox .check-circle.checked .check-num{opacity:1}
+  .vote-lightbox .check-circle.checked .check-mark{display:none}
+  .vote-lightbox .check-circle:not(.checked) .check-num{display:none}
+
+  /* 底部提交栏 */
+  .vote-submit-bar{
+    position:fixed;bottom:0;left:0;right:0;z-index:160;
+    padding:20px 28px calc(20px + env(safe-area-inset-bottom));
+    background:linear-gradient(to top,var(--bg) 60%,rgba(10,10,11,.9),transparent);
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    transform:translateY(100%);
+    transition:transform .35s cubic-bezier(.2,.7,.3,1);
+  }
+  .vote-submit-bar.show{transform:translateY(0)}
+
+  .vote-submit-bar .counter{
+    font-size:12px;color:var(--ink-3);letter-spacing:.04em;
+  }
+  .vote-submit-bar .counter .num{color:var(--ink);font-weight:600}
+
+  .vote-submit-btn{
+    padding:14px 40px;border-radius:999px;
+    background:var(--ink);color:var(--bg);
+    border:none;font-size:14px;font-weight:600;letter-spacing:.04em;
+    cursor:pointer;font-family:inherit;
+    transition:all .25s ease;
+  }
+  .vote-submit-btn:hover{
+    background:rgba(255,255,255,.85);
+    transform:translateY(-2px);
+    box-shadow:0 10px 30px -8px rgba(255,255,255,.2);
+  }
+  .vote-submit-btn:active{transform:scale(.97)}
+
+  /* ---------- 提交成功弹窗 ---------- */
+  .vote-thanks{
+    position:fixed;inset:0;z-index:300;
+    background:rgba(5,5,6,.85);backdrop-filter:blur(8px);
+    display:none;align-items:center;justify-content:center;
+    cursor:pointer;
+  }
+  .vote-thanks.open{display:flex;animation:fadeIn .3s ease}
+  .vote-thanks-card{
+    background:var(--bg-soft);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:48px 40px;
+    max-width:380px;width:calc(100% - 48px);
+    text-align:center;
+    cursor:default;
+    animation:rise .5s cubic-bezier(.2,.7,.3,1) both;
+  }
+  .vote-thanks-card .thanks-icon{
+    width:56px;height:56px;border-radius:50%;
+    background:rgba(255,255,255,.1);
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 20px;
+    font-size:26px;
+  }
+  .vote-thanks-card h3{
+    font-size:20px;font-weight:500;margin-bottom:10px;letter-spacing:.01em;
+  }
+  .vote-thanks-card p{
+    font-size:13px;color:var(--ink-2);line-height:1.7;
+  }
+
+  /* ---------- 排行榜视图 ---------- */
+  .leaderboard-view{
+    position:fixed;inset:0;z-index:180;
+    background:var(--bg);
+    display:none;flex-direction:column;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+  }
+  .leaderboard-view.open{display:flex;animation:fadeIn .3s ease}
+  .leaderboard-view .lb-header{
+    position:sticky;top:0;z-index:10;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 28px;
+    background:linear-gradient(to bottom,var(--bg),rgba(10,10,11,.9) 70%,transparent);
+  }
+  .leaderboard-view .lb-header .title{
+    font-size:14px;font-weight:500;color:var(--ink);letter-spacing:.02em;
+  }
+  .leaderboard-view .lb-header .sub{
+    font-size:11px;color:var(--ink-3);margin-top:2px;
+  }
+  .leaderboard-view .lb-header .close-btn{
+    width:40px;height:40px;border-radius:50%;
+    border:1px solid var(--line);background:transparent;
+    color:var(--ink-2);font-size:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .25s;
+  }
+  .leaderboard-view .lb-header .close-btn:hover{background:rgba(255,255,255,.06);color:var(--ink)}
+  .leaderboard-list{
+    padding:12px 28px 120px;
+    max-width:600px;margin:0 auto;width:100%;
+  }
+  .lb-item{
+    display:flex;align-items:center;gap:14px;
+    padding:12px 16px;border-radius:12px;
+    margin-bottom:6px;
+    background:var(--bg-soft);
+    transition:background .2s;
+  }
+  .lb-item:hover{background:rgba(255,255,255,.04)}
+  .lb-item .lb-rank{
+    flex-shrink:0;width:32px;text-align:center;
+    font-size:18px;font-weight:700;color:var(--ink-3);
+  }
+  .lb-item.top1 .lb-rank{color:#f4a261}
+  .lb-item.top2 .lb-rank{color:#e76f51}
+  .lb-item.top3 .lb-rank{color:#e9c46a}
+  .lb-item .lb-thumb{
+    flex-shrink:0;width:48px;height:48px;border-radius:8px;overflow:hidden;
+    background:var(--bg);
+  }
+  .lb-item .lb-thumb img{width:100%;height:100%;object-fit:cover}
+  .lb-item .lb-info{
+    flex:1;min-width:0;
+    display:flex;flex-direction:column;gap:4px;
+  }
+  .lb-item .lb-name{
+    font-size:13px;color:var(--ink);font-weight:500;
+  }
+  .lb-item .lb-bar-outer{
+    width:100%;height:4px;border-radius:2px;
+    background:rgba(255,255,255,.06);overflow:hidden;
+  }
+  .lb-item .lb-bar-fill{
+    height:100%;border-radius:2px;
+    background:linear-gradient(to right,#e76f51,#f4a261);
+    width:0%;transition:width 1s cubic-bezier(.2,.7,.3,1);
+  }
+  .lb-item .lb-votes{
+    flex-shrink:0;font-size:13px;font-weight:600;color:var(--ink-2);
+    min-width:36px;text-align:right;
+  }
+  .lb-item.top1 .lb-votes{color:#f4a261}
+  .lb-item.top2 .lb-votes{color:#e76f51}
+  .lb-item.top3 .lb-votes{color:#e9c46a}
+  .lb-empty{
+    text-align:center;padding:80px 20px;
+    color:var(--ink-3);font-size:13px;
+  }
+
+  /* ---------- 票数进度条 ---------- */
+  .vote-progress{
+    position:fixed;bottom:0;left:0;right:0;z-index:140;
+    padding:14px 24px calc(14px + env(safe-area-inset-bottom));
+    background:linear-gradient(to top,var(--bg) 70%,rgba(10,10,11,.85),transparent);
+    display:flex;flex-direction:column;gap:8px;
+    transform:translateY(100%);
+    transition:transform .4s cubic-bezier(.2,.7,.3,1);
+  }
+  .vote-progress.show{transform:translateY(0)}
+  .vote-progress .vp-label{
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:11px;color:var(--ink-3);letter-spacing:.04em;
+  }
+  .vote-progress .vp-label .vp-count{
+    color:var(--ink);font-weight:600;font-size:13px;
+  }
+  .vote-progress .vp-bar-outer{
+    width:100%;height:6px;border-radius:3px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden;
+  }
+  .vote-progress .vp-bar-fill{
+    height:100%;border-radius:3px;
+    background:linear-gradient(to right,#e76f51,#f4a261);
+    width:0%;
+    transition:width 1.2s cubic-bezier(.2,.7,.3,1);
+  }
+
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   @keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
   @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
   @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-  /* 移动端适配 — 保持与桌面端完全相同的笑脸形状 */
+  /* 移动端适配 */
   @media(max-width:768px){
     .smiley-section{
       padding:70px 16px 20px;
@@ -258,7 +571,6 @@
       max-width:min(calc(100vw - 32px), calc(100svh - 110px));
       max-height:min(calc(100vw - 32px), calc(100svh - 110px));
     }
-    /* 保持桌面端完全一致的 12 列笑脸位置 */
     .cell-1{grid-column:2 / 4;grid-row:2 / 4}
     .cell-2{grid-column:4 / 6;grid-row:2 / 4}
     .cell-3{grid-column:2 / 4;grid-row:4 / 6}
@@ -281,7 +593,18 @@
     .nav .brand .name{font-size:13px}
     .nav .brand .title{font-size:10px}
     .nav .brand .en{font-size:9px}
+    .nav .nav-right{gap:14px}
     .scroll-hint{margin-top:18px}
+
+    .vote-grid{grid-template-columns:repeat(3,1fr);gap:6px;padding:8px 16px 100px}
+    .vote-thumb .order-badge{width:22px;height:22px;font-size:11px;top:6px;right:6px}
+    .vote-lightbox .check-circle{width:42px;height:42px;bottom:12px;left:12px}
+    .vote-thanks-card{padding:36px 28px}
+    .leaderboard-list{padding:8px 16px 100px}
+    .lb-item{padding:10px 12px;gap:10px}
+    .lb-item .lb-thumb{width:40px;height:40px}
+    .lb-item .lb-rank{width:26px;font-size:15px}
+    .lb-item .lb-name{font-size:12px}
   }
 </style>
 </head>
@@ -294,6 +617,8 @@
     <span class="en">Independent illustrator & visual artist</span>
   </div>
   <div class="nav-right">
+    <button class="vote-btn" id="vote-open-btn"><span class="vote-dot"></span>投票</button>
+    <button class="vote-btn" id="leaderboard-btn">排行榜</button>
     <a href="#about">2026</a>
   </div>
 </nav>
@@ -304,33 +629,28 @@
   <section class="smiley-section">
     <div class="smiley-grid">
       <!-- 左眼 -->
-      <div class="smiley-cell cell-1" onclick="openLightbox('images/full/new-321515.jpg?v=6')"><img src="images/web/new-321515.jpg?v=6" alt="作品 32"></div>
-      <div class="smiley-cell cell-2" onclick="openLightbox('images/full/new-331515.jpg?v=6')"><img src="images/web/new-331515.jpg?v=6" alt="作品 33"></div>
-      <div class="smiley-cell cell-3" onclick="openLightbox('images/full/new-341515.jpg?v=6')"><img src="images/web/new-341515.jpg?v=6" alt="作品 34"></div>
-      <div class="smiley-cell cell-4" onclick="openLightbox('images/full/new-351515.jpg?v=6')"><img src="images/web/new-351515.jpg?v=6" alt="作品 35"></div>
-
+      <div class="smiley-cell cell-1" onclick="openLightbox('https://yaoxuan.xin/images/full/new-321515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-321515.jpg?v=6" alt="作品 32"></div>
+      <div class="smiley-cell cell-2" onclick="openLightbox('https://yaoxuan.xin/images/full/new-331515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-331515.jpg?v=6" alt="作品 33"></div>
+      <div class="smiley-cell cell-3" onclick="openLightbox('https://yaoxuan.xin/images/full/new-341515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-341515.jpg?v=6" alt="作品 34"></div>
+      <div class="smiley-cell cell-4" onclick="openLightbox('https://yaoxuan.xin/images/full/new-351515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-351515.jpg?v=6" alt="作品 35"></div>
       <!-- 右眼 -->
-      <div class="smiley-cell cell-5" onclick="openLightbox('images/full/new-361515.jpg?v=6')"><img src="images/web/new-361515.jpg?v=6" alt="作品 36"></div>
-      <div class="smiley-cell cell-6" onclick="openLightbox('images/full/new-371515.jpg?v=6')"><img src="images/web/new-371515.jpg?v=6" alt="作品 37"></div>
-      <div class="smiley-cell cell-7" onclick="openLightbox('images/full/new-381515.jpg?v=6')"><img src="images/web/new-381515.jpg?v=6" alt="作品 38"></div>
-      <div class="smiley-cell cell-8" onclick="openLightbox('images/full/new-391515.jpg?v=6')"><img src="images/web/new-391515.jpg?v=6" alt="作品 39"></div>
-
+      <div class="smiley-cell cell-5" onclick="openLightbox('https://yaoxuan.xin/images/full/new-361515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-361515.jpg?v=6" alt="作品 36"></div>
+      <div class="smiley-cell cell-6" onclick="openLightbox('https://yaoxuan.xin/images/full/new-371515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-371515.jpg?v=6" alt="作品 37"></div>
+      <div class="smiley-cell cell-7" onclick="openLightbox('https://yaoxuan.xin/images/full/new-381515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-381515.jpg?v=6" alt="作品 38"></div>
+      <div class="smiley-cell cell-8" onclick="openLightbox('https://yaoxuan.xin/images/full/new-391515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-391515.jpg?v=6" alt="作品 39"></div>
       <!-- 鼻子 -->
-      <div class="smiley-cell cell-9" onclick="openLightbox('images/full/new-401515.jpg?v=6')"><img src="images/web/new-401515.jpg?v=6" alt="作品 40"></div>
-      <div class="smiley-cell cell-10" onclick="openLightbox('images/full/new-411515.jpg?v=6')"><img src="images/web/new-411515.jpg?v=6" alt="作品 41"></div>
-
+      <div class="smiley-cell cell-9" onclick="openLightbox('https://yaoxuan.xin/images/full/new-401515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-401515.jpg?v=6" alt="作品 40"></div>
+      <div class="smiley-cell cell-10" onclick="openLightbox('https://yaoxuan.xin/images/full/new-411515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-411515.jpg?v=6" alt="作品 41"></div>
       <!-- 脸颊 -->
-      <div class="smiley-cell cell-11" onclick="openLightbox('images/full/new-421515.jpg?v=6')"><img src="images/web/new-421515.jpg?v=6" alt="作品 42"></div>
-      <div class="smiley-cell cell-12" onclick="openLightbox('images/full/new-431515.jpg?v=6')"><img src="images/web/new-431515.jpg?v=6" alt="作品 43"></div>
-
+      <div class="smiley-cell cell-11" onclick="openLightbox('https://yaoxuan.xin/images/full/new-421515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-421515.jpg?v=6" alt="作品 42"></div>
+      <div class="smiley-cell cell-12" onclick="openLightbox('https://yaoxuan.xin/images/full/new-431515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-431515.jpg?v=6" alt="作品 43"></div>
       <!-- 嘴巴 -->
-      <div class="smiley-cell cell-13" onclick="openLightbox('images/full/new-441515.jpg?v=6')"><img src="images/web/new-441515.jpg?v=6" alt="作品 44"></div>
-      <div class="smiley-cell cell-14" onclick="openLightbox('images/full/new-451515.jpg?v=6')"><img src="images/web/new-451515.jpg?v=6" alt="作品 45"></div>
-      <div class="smiley-cell cell-15" onclick="openLightbox('images/full/new-461515.jpg?v=6')"><img src="images/web/new-461515.jpg?v=6" alt="作品 46"></div>
-      <div class="smiley-cell cell-16" onclick="openLightbox('images/full/new-471515.jpg?v=6')"><img src="images/web/new-471515.jpg?v=6" alt="作品 47"></div>
-      <div class="smiley-cell cell-17" onclick="openLightbox('images/full/new-481515.jpg?v=6')"><img src="images/web/new-481515.jpg?v=6" alt="作品 48"></div>
+      <div class="smiley-cell cell-13" onclick="openLightbox('https://yaoxuan.xin/images/full/new-441515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-441515.jpg?v=6" alt="作品 44"></div>
+      <div class="smiley-cell cell-14" onclick="openLightbox('https://yaoxuan.xin/images/full/new-451515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-451515.jpg?v=6" alt="作品 45"></div>
+      <div class="smiley-cell cell-15" onclick="openLightbox('https://yaoxuan.xin/images/full/new-461515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-461515.jpg?v=6" alt="作品 46"></div>
+      <div class="smiley-cell cell-16" onclick="openLightbox('https://yaoxuan.xin/images/full/new-471515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-471515.jpg?v=6" alt="作品 47"></div>
+      <div class="smiley-cell cell-17" onclick="openLightbox('https://yaoxuan.xin/images/full/new-481515.jpg?v=6')"><img src="https://yaoxuan.xin/images/web/new-481515.jpg?v=6" alt="作品 48"></div>
     </div>
-
     <div class="scroll-hint">Scroll</div>
   </section>
 
@@ -368,9 +688,8 @@
   <footer id="contact">
     <div class="top">
       <p>商务合作 / Business Inquiry</p>
-      <a href="mailto:1364795397@qq.com">1364795397@qq.com</a>
+      <a href="/cdn-cgi/l/email-protection#be8f8d888a89878b8d8789fecfcf90ddd1d3"><span class="__cf_email__" data-cfemail="be8f8d888a89878b8d8789fecfcf90ddd1d3">[email&#160;protected]</span></a>
     </div>
-
     <div class="contact-row">
       <button class="contact-chip" type="button" data-copy="YXZK99072">
         <span class="chip-label">微信 · WeChat</span>
@@ -385,20 +704,114 @@
         <span class="chip-value">@xyao_9872</span>
       </a>
     </div>
-
     <p class="copy">© 2026 姚轩 · 中国</p>
   </footer>
 
 </main>
 
-<!-- 灯箱 -->
+<!-- 原灯箱（首页笑脸大图） -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <div class="lb-close">✕</div>
   <img id="lightbox-img" src="" alt="">
 </div>
 
+<!-- ========== 投票全屏视图 ========== -->
+<div class="vote-view" id="vote-view">
+  <div class="vote-view-header">
+    <div>
+      <div class="title">选出你最爱的前三名</div>
+      <div class="sub">点击缩略图查看大图并勾选 · 选满 3 张后提交</div>
+    </div>
+    <button class="close-btn" id="vote-close-btn">✕</button>
+  </div>
+  <div class="vote-grid" id="vote-grid"></div>
+</div>
+
+<!-- ========== 投票大图预览（带左下角勾选） ========== -->
+<div class="vote-lightbox" id="vote-lightbox">
+  <button class="vl-close" id="vl-close">✕</button>
+  <div class="vl-img-wrap">
+    <img id="vl-img" src="" alt="">
+    <div class="check-circle" id="check-circle">
+      <span class="check-mark">✓</span>
+      <span class="check-num"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 底部提交栏 ========== -->
+<div class="vote-submit-bar" id="vote-submit-bar">
+  <div class="counter">已选 <span class="num" id="vote-count-num">0</span> / 3</div>
+  <button class="vote-submit-btn" id="vote-submit-btn">提交我的前三</button>
+</div>
+
+<!-- ========== 提交成功弹窗 ========== -->
+<div class="vote-thanks" id="vote-thanks">
+  <div class="vote-thanks-card">
+    <div class="thanks-icon">♥</div>
+    <h3>谢谢喜欢和参与</h3>
+    <p>请期待我的更多作品</p>
+  </div>
+</div>
+
+<!-- ========== 排行榜视图 ========== -->
+<div class="leaderboard-view" id="leaderboard-view">
+  <div class="lb-header">
+    <div>
+      <div class="title">作品投票排行榜</div>
+      <div class="sub" id="lb-sub">暂无投票数据</div>
+    </div>
+    <button class="close-btn" id="lb-close-btn">&#x2715;</button>
+  </div>
+  <div class="leaderboard-list" id="leaderboard-list"></div>
+</div>
+
+<!-- ========== 票数进度条 ========== -->
+<div class="vote-progress" id="vote-progress">
+  <div class="vp-label">
+    <span>已收到投票</span>
+    <span><span class="vp-count" id="vp-count">0</span> 票</span>
+  </div>
+  <div class="vp-bar-outer">
+    <div class="vp-bar-fill" id="vp-bar-fill"></div>
+  </div>
+</div>
+
 <script>
-// 灯箱
+// ===== 作品数据 =====
+var WORKS = [
+  {id:'w32',num:32,thumb:'images/web/new-32.jpg',full:'images/full/new-32.jpg'},
+  {id:'w33',num:33,thumb:'images/web/new-33.jpg',full:'images/full/new-33.jpg'},
+  {id:'w34',num:34,thumb:'images/web/new-34.jpg',full:'images/full/new-34.jpg'},
+  {id:'w35',num:35,thumb:'images/web/new-35.jpg',full:'images/full/new-35.jpg'},
+  {id:'w36',num:36,thumb:'images/web/new-36.jpg',full:'images/full/new-36.jpg'},
+  {id:'w37',num:37,thumb:'images/web/new-37.jpg',full:'images/full/new-37.jpg'},
+  {id:'w38',num:38,thumb:'images/web/new-38.jpg',full:'images/full/new-38.jpg'},
+  {id:'w39',num:39,thumb:'images/web/new-39.jpg',full:'images/full/new-39.jpg'},
+  {id:'w40',num:40,thumb:'images/web/new-40.jpg',full:'images/full/new-40.jpg'},
+  {id:'w41',num:41,thumb:'images/web/new-41.jpg',full:'images/full/new-41.jpg'},
+  {id:'w42',num:42,thumb:'images/web/new-42.jpg',full:'images/full/new-42.jpg'},
+  {id:'w43',num:43,thumb:'images/web/new-43.jpg',full:'images/full/new-43.jpg'},
+  {id:'w44',num:44,thumb:'images/web/new-44.jpg',full:'images/full/new-44.jpg'},
+  {id:'w45',num:45,thumb:'images/web/new-45.jpg',full:'images/full/new-45.jpg'},
+  {id:'w46',num:46,thumb:'images/web/new-46.jpg',full:'images/full/new-46.jpg'},
+  {id:'w47',num:47,thumb:'images/web/new-47.jpg',full:'images/full/new-47.jpg'},
+  {id:'w48',num:48,thumb:'images/web/new-48.jpg',full:'images/full/new-48.jpg'},
+  {id:'w49',num:49,thumb:'images/web/new-49.jpg',full:'images/full/new-49.jpg'},
+  {id:'w50',num:50,thumb:'images/web/new-50.jpg',full:'images/full/new-50.jpg'},
+  {id:'w51',num:51,thumb:'images/web/new-51.jpg',full:'images/full/new-51.jpg'},
+  {id:'w52',num:52,thumb:'images/web/new-52.jpg',full:'images/full/new-52.jpg'},
+  {id:'w53',num:53,thumb:'images/web/new-53.jpg',full:'images/full/new-53.jpg'},
+  {id:'w54',num:54,thumb:'images/web/new-54.jpg',full:'images/full/new-54.jpg'},
+  {id:'w55',num:55,thumb:'images/web/new-55.jpg',full:'images/full/new-55.jpg'},
+  {id:'w56',num:56,thumb:'images/web/new-56.jpg',full:'images/full/new-56.jpg'}
+];
+
+var MAX_VOTES = 3;
+var voteSelections = []; // 存 work id，顺序代表选择顺序
+var currentVlWorkId = null; // 当前大图预览的作品 id
+
+// ===== 原灯箱（首页笑脸） =====
 function openLightbox(src){
   document.getElementById('lightbox-img').src=src;
   document.getElementById('lightbox').classList.add('open');
@@ -409,28 +822,24 @@ function closeLightbox(){
   document.body.style.overflow='';
 }
 
-// 图片保护：禁止右键菜单
-document.addEventListener('contextmenu',function(e){
-  e.preventDefault();
-  return false;
-});
-
-// 图片保护：禁止拖拽图片
-document.addEventListener('dragstart',function(e){
-  if(e.target.tagName==='IMG') e.preventDefault();
-});
-
-// 图片保护：禁止快捷键保存（Ctrl+S / Ctrl+U / F12 / Ctrl+Shift+I）
+// ===== 图片保护 =====
+document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
+document.addEventListener('dragstart',function(e){if(e.target.tagName==='IMG')e.preventDefault();});
 document.addEventListener('keydown',function(e){
   if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();return false;}
   if((e.ctrlKey||e.metaKey)&&e.key==='u'){e.preventDefault();return false;}
   if(e.key==='F12'){e.preventDefault();return false;}
   if((e.ctrlKey||e.metaKey)&&e.shiftKey&&(e.key==='I'||e.key==='i')){e.preventDefault();return false;}
-  // 灯箱打开时按 ESC 关闭
-  if(e.key==='Escape'){closeLightbox();}
+  if(e.key==='Escape'){
+    if(document.getElementById('vote-thanks').classList.contains('open')){closeVoteThanks();return;}
+    if(document.getElementById('leaderboard-view').classList.contains('open')){closeLeaderboard();return;}
+    if(document.getElementById('vote-lightbox').classList.contains('open')){closeVoteLightbox();return;}
+    if(document.getElementById('vote-view').classList.contains('open')){closeVoteView();return;}
+    if(document.getElementById('lightbox').classList.contains('open')){closeLightbox();return;}
+  }
 });
 
-// 复制联系方式
+// ===== 复制联系方式 =====
 (function(){
   function legacyCopy(text){
     var ta=document.createElement('textarea');
@@ -456,6 +865,374 @@ document.addEventListener('keydown',function(e){
     });
   });
 })();
+
+/* ============================================================
+ * 投票系统 — 无需登录，点缩略图大图预览，左下角勾选，选满 3 张提交
+ * 后端：Cloudflare Worker + KV（全站共享投票数据）
+ * ============================================================ */
+
+var API_BASE = '';  // 同域，通过 Cloudflare Worker 路由 /api/*
+
+// 检查是否已投过票（先查 localStorage 快速判断，再查服务器）
+function hasVoted(){
+  return !!localStorage.getItem('yaoxuan_voted');
+}
+
+// 打开投票视图
+function openVoteView(){
+  if(hasVoted()){
+    // 已投过票，直接显示感谢
+    showVoteThanks();
+    return;
+  }
+  document.getElementById('vote-view').classList.add('open');
+  document.body.style.overflow='hidden';
+  renderVoteGrid();
+  updateVoteUI();
+}
+
+function closeVoteView(){
+  document.getElementById('vote-view').classList.remove('open');
+  document.body.style.overflow='';
+  // 关闭时也关掉大图预览
+  closeVoteLightbox();
+  // 隐藏提交栏
+  document.getElementById('vote-submit-bar').classList.remove('show');
+}
+
+// 渲染缩略图网格
+function renderVoteGrid(){
+  var grid = document.getElementById('vote-grid');
+  grid.innerHTML = WORKS.map(function(w){
+    return '<div class="vote-thumb'+(voteSelections.indexOf(w.id)>=0?' selected':'')+'" data-work-id="'+w.id+'" data-full="'+w.full+'">'+
+      '<img src="'+w.thumb+'" alt="作品 '+w.num+'">'+
+      '<div class="order-badge">'+(voteSelections.indexOf(w.id)+1)+'</div>'+
+    '</div>';
+  }).join('');
+  // 绑定点击 → 打开大图预览
+  grid.querySelectorAll('.vote-thumb').forEach(function(el){
+    el.addEventListener('click', function(){
+      var workId = el.getAttribute('data-work-id');
+      openVoteLightbox(workId);
+    });
+  });
+}
+
+// 打开投票大图预览
+function openVoteLightbox(workId){
+  currentVlWorkId = workId;
+  var w = WORKS.find(function(x){return x.id===workId});
+  if(!w) return;
+  document.getElementById('vl-img').src = w.full;
+  updateCheckCircle();
+  document.getElementById('vote-lightbox').classList.add('open');
+}
+
+function closeVoteLightbox(){
+  document.getElementById('vote-lightbox').classList.remove('open');
+  // 刷新缩略图网格上的选中标记
+  renderVoteGrid();
+}
+
+// 更新左下角勾选圆圈状态
+function updateCheckCircle(){
+  var circle = document.getElementById('check-circle');
+  var numEl = circle.querySelector('.check-num');
+  if(voteSelections.indexOf(currentVlWorkId) >= 0){
+    circle.classList.add('checked');
+    numEl.textContent = voteSelections.indexOf(currentVlWorkId) + 1;
+  } else {
+    circle.classList.remove('checked');
+    numEl.textContent = '';
+  }
+}
+
+// 点击勾选圆圈 → 切换选中
+function toggleCheck(){
+  if(!currentVlWorkId) return;
+  var idx = voteSelections.indexOf(currentVlWorkId);
+  if(idx >= 0){
+    // 取消选中
+    voteSelections.splice(idx, 1);
+  } else {
+    // 选中
+    if(voteSelections.length >= MAX_VOTES){
+      // 已满 3 张，不允许再选
+      return;
+    }
+    voteSelections.push(currentVlWorkId);
+  }
+  updateCheckCircle();
+  updateVoteUI();
+  // 如果选满 3 张，更新提交栏显示
+  if(voteSelections.length === MAX_VOTES){
+    document.getElementById('vote-submit-bar').classList.add('show');
+  } else {
+    document.getElementById('vote-submit-bar').classList.remove('show');
+  }
+}
+
+// 更新计数和按钮状态
+function updateVoteUI(){
+  document.getElementById('vote-count-num').textContent = voteSelections.length;
+  // 更新导航栏投票按钮的小点
+  var voteBtn = document.getElementById('vote-open-btn');
+  if(voteSelections.length > 0){
+    voteBtn.classList.add('has-votes');
+  } else {
+    voteBtn.classList.remove('has-votes');
+  }
+  // 选满 3 张显示提交栏
+  if(voteSelections.length === MAX_VOTES){
+    document.getElementById('vote-submit-bar').classList.add('show');
+  } else {
+    document.getElementById('vote-submit-bar').classList.remove('show');
+  }
+}
+
+// 提交投票
+function submitVote(){
+  if(voteSelections.length !== MAX_VOTES) return;
+
+  // 禁用按钮防止重复点击
+  var submitBtn = document.getElementById('vote-submit-btn');
+  submitBtn.textContent = '提交中...';
+  submitBtn.disabled = true;
+
+  // 发送投票到后端
+  fetch(API_BASE + '/api/vote', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ selections: voteSelections })
+  })
+  .then(function(res){ return res.json(); })
+  .then(function(data){
+    if(data.error){
+      // 投票失败（可能已投过）
+      submitBtn.textContent = '提交我的前三';
+      submitBtn.disabled = false;
+      if(data.alreadyVoted){
+        // 服务器说已投过，标记本地
+        localStorage.setItem('yaoxuan_voted', '[]');
+        closeVoteLightbox();
+        closeVoteView();
+        showVoteThanks();
+      } else {
+        alert(data.error);
+      }
+      return;
+    }
+
+    // 投票成功，记录到 localStorage
+    localStorage.setItem('yaoxuan_voted', JSON.stringify(voteSelections));
+
+    // 关闭投票视图和大图
+    closeVoteLightbox();
+    closeVoteView();
+
+    // 显示感谢弹窗
+    showVoteThanks();
+
+    // 延迟显示进度条（在感谢弹窗关闭后）
+    setTimeout(function(){
+      updateVoteProgress(data.totalVotes);
+    }, 800);
+  })
+  .catch(function(err){
+    // 网络错误，回退到 localStorage 模式
+    submitBtn.textContent = '提交我的前三';
+    submitBtn.disabled = false;
+    alert('网络错误，请稍后重试');
+  });
+}
+
+// 显示感谢弹窗
+function showVoteThanks(){
+  document.getElementById('vote-thanks').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+// 关闭感谢弹窗
+function closeVoteThanks(){
+  document.getElementById('vote-thanks').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ===== 票数进度条 =====
+var VOTE_TARGET = 50; // 目标票数（进度条满格值）
+
+function updateVoteProgress(votes){
+  var bar = document.getElementById('vote-progress');
+  var fill = document.getElementById('vp-bar-fill');
+  var countEl = document.getElementById('vp-count');
+
+  // 更新数字
+  countEl.textContent = votes;
+
+  // 计算进度百分比
+  var pct = Math.min(votes / VOTE_TARGET * 100, 100);
+  
+  // 先显示进度条
+  bar.classList.add('show');
+  
+  // 延迟设置宽度，触发 CSS transition 动画
+  setTimeout(function(){
+    fill.style.width = pct + '%';
+  }, 100);
+}
+
+// 页面加载时，从服务器获取真实总票数并显示进度条
+(function initProgressOnLoad(){
+  fetch(API_BASE + '/api/leaderboard')
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if(data.success && data.totalVotes > 0){
+        setTimeout(function(){
+          updateVoteProgress(data.totalVotes);
+        }, 600);
+      }
+    })
+    .catch(function(){
+      // 服务器不可用时静默失败（本地预览时不显示进度条）
+    });
+})();
+
+// ===== 排行榜 =====
+function openLeaderboard(){
+  // 如果正在投票视图，先关闭
+  if(document.getElementById('vote-view').classList.contains('open')){
+    closeVoteView();
+  }
+  renderLeaderboard();
+  document.getElementById('leaderboard-view').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeLeaderboard(){
+  document.getElementById('leaderboard-view').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function renderLeaderboard(){
+  var list = document.getElementById('leaderboard-list');
+  var sub = document.getElementById('lb-sub');
+
+  // 显示加载中
+  sub.textContent = '加载中...';
+  list.innerHTML = '<div class="lb-empty">正在获取排行榜数据...</div>';
+
+  // 从服务器获取排行榜数据
+  fetch(API_BASE + '/api/leaderboard')
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if(!data.success){
+        sub.textContent = '获取数据失败';
+        list.innerHTML = '<div class="lb-empty">获取排行榜数据失败，请稍后重试</div>';
+        return;
+      }
+
+      var totalVotes = data.totalVotes;
+      var serverWorks = data.works;
+
+      // 构建 ID→票数 映射
+      var votesMap = {};
+      serverWorks.forEach(function(w){ votesMap[w.id] = w.votes; });
+
+      // 构建排名数据（合并 WORKS 本地数据和服务器票数）
+      var ranking = WORKS.map(function(w){
+        return {
+          id: w.id,
+          num: w.num,
+          thumb: w.thumb,
+          votes: votesMap[w.id] || 0
+        };
+      });
+
+      // 按票数降序排列
+      ranking.sort(function(a, b){ return b.votes - a.votes; });
+
+      // 更新副标题
+      if(totalVotes === 0){
+        sub.textContent = '暂无投票数据';
+      } else {
+        sub.textContent = '共 ' + totalVotes + ' 人参与投票';
+      }
+
+      // 检查是否有投票数据
+      var hasVotes = ranking.some(function(r){ return r.votes > 0; });
+      if(!hasVotes){
+        list.innerHTML = '<div class="lb-empty">还没有人投票<br>点击「投票」参与选择你最喜欢的作品</div>';
+        return;
+      }
+
+      // 找到最大票数用于计算进度条比例
+      var maxVotes = ranking[0].votes;
+
+      // 渲染排行榜
+      list.innerHTML = ranking.map(function(r, idx){
+        var rank = idx + 1;
+        var topClass = '';
+        if(r.votes === 0) topClass = '';
+        else if(rank === 1) topClass = ' top1';
+        else if(rank === 2) topClass = ' top2';
+        else if(rank === 3) topClass = ' top3';
+
+        var pct = maxVotes > 0 ? (r.votes / maxVotes * 100) : 0;
+
+        return '<div class="lb-item' + topClass + '">' +
+          '<div class="lb-rank">' + (r.votes > 0 ? rank : '–') + '</div>' +
+          '<div class="lb-thumb"><img src="' + r.thumb + '" alt="作品 ' + r.num + '"></div>' +
+          '<div class="lb-info">' +
+            '<div class="lb-name">作品 ' + r.num + (r.votes > 0 ? '' : ' (未获票)') + '</div>' +
+            '<div class="lb-bar-outer"><div class="lb-bar-fill" style="width:0%"></div></div>' +
+          '</div>' +
+          '<div class="lb-votes">' + r.votes + '</div>' +
+        '</div>';
+      }).join('');
+
+      // 延迟触发进度条动画
+      setTimeout(function(){
+        list.querySelectorAll('.lb-item').forEach(function(item, idx){
+          var fill = item.querySelector('.lb-bar-fill');
+          if(fill){
+            var r = ranking[idx];
+            var pct = maxVotes > 0 ? (r.votes / maxVotes * 100) : 0;
+            setTimeout(function(){ fill.style.width = pct + '%'; }, idx * 30);
+          }
+        });
+      }, 100);
+    })
+    .catch(function(){
+      sub.textContent = '无法连接服务器';
+      list.innerHTML = '<div class="lb-empty">无法获取排行榜数据<br>请检查网络后重试</div>';
+    });
+}
+
+// ===== 事件绑定 =====
+document.getElementById('vote-open-btn').addEventListener('click', openVoteView);
+document.getElementById('leaderboard-btn').addEventListener('click', openLeaderboard);
+document.getElementById('vote-close-btn').addEventListener('click', closeVoteView);
+document.getElementById('lb-close-btn').addEventListener('click', closeLeaderboard);
+document.getElementById('vl-close').addEventListener('click', closeVoteLightbox);
+document.getElementById('check-circle').addEventListener('click', function(e){
+  e.stopPropagation();
+  toggleCheck();
+});
+document.getElementById('vote-submit-btn').addEventListener('click', submitVote);
+
+// 点大图预览的背景关闭（不点图片和勾选圆圈时）
+document.getElementById('vote-lightbox').addEventListener('click', function(e){
+  if(e.target === this || e.target.classList.contains('vl-img-wrap')) {
+    closeVoteLightbox();
+  }
+});
+
+// 点感谢弹窗空白区域关闭
+document.getElementById('vote-thanks').addEventListener('click', function(e){
+  if(e.target === this){
+    closeVoteThanks();
+  }
+});
 </script>
 
 </body>
