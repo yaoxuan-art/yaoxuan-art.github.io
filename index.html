@@ -1269,8 +1269,13 @@ function openWorkLightbox(workId){
       skipBtn.style.display = 'inline-block';
       replayBtn.style.display = 'none';
       started = true;
+      video.muted = true;
       video.currentTime = 0;
-      video.play().catch(function(){});
+      var p = video.play();
+      if(p && p.then) p.catch(function(){
+        video.muted = true;
+        video.play().catch(function(){});
+      });
     }
     function showImage(){
       video.style.display = 'none';
@@ -1438,8 +1443,13 @@ function openVoteLightbox(workId){
       skipBtn.style.display = 'inline-block';
       replayBtn.style.display = 'none';
       started = true;
+      video.muted = true;
       video.currentTime = 0;
-      video.play().catch(function(){});
+      var p = video.play();
+      if(p && p.then) p.catch(function(){
+        video.muted = true;
+        video.play().catch(function(){});
+      });
     }
     function showImage(){
       video.style.display = 'none';
@@ -1907,8 +1917,13 @@ function openNamingLightbox(workId){
       skipBtn.style.display = 'inline-block';
       replayBtn.style.display = 'none';
       started = true;
+      video.muted = true;
       video.currentTime = 0;
-      video.play().catch(function(){});
+      var p = video.play();
+      if(p && p.then) p.catch(function(){
+        video.muted = true;
+        video.play().catch(function(){});
+      });
     }
     function showImage(){
       video.style.display = 'none';
