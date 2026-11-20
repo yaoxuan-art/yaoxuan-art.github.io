@@ -1216,7 +1216,7 @@ var WORKS = [
   {id:'w39',num:39,thumb:'images/web/new-39.jpg?v=7',full:'images/full/new-39.jpg?v=7'},
   {id:'w40',num:40,thumb:'images/web/new-40.jpg?v=7',full:'images/full/new-40.jpg?v=7',anim:'images/anim/w40.mp4'},
   {id:'w41',num:41,thumb:'images/web/new-41.jpg?v=7',full:'images/full/new-41.jpg?v=7',anim:'images/anim/w41.mp4'},
-  {id:'w42',num:42,thumb:'images/web/new-42.jpg?v=7',full:'images/full/new-42.jpg?v=7',anim:'images/anim/w42.mp4'},
+  {id:'w42',num:42,thumb:'images/web/new-42.jpg?v=7',full:'images/full/new-42.jpg?v=7',anim:'images/anim/w42.mp4?v=2'},
   {id:'w43',num:43,thumb:'images/web/new-43.jpg?v=7',full:'images/full/new-43.jpg?v=7'},
   {id:'w44',num:44,thumb:'images/web/new-44.jpg?v=7',full:'images/full/new-44.jpg?v=7'},
   {id:'w45',num:45,thumb:'images/web/new-45.jpg?v=7',full:'images/full/new-45.jpg?v=7'},
@@ -1263,12 +1263,12 @@ function openWorkLightbox(workId){
 
     var started = false;
     function playAnim(){
-      if(started) return; started = true;
       img.style.display = 'none';
       video.style.display = 'block';
       controls.style.display = 'flex';
       skipBtn.style.display = 'inline-block';
       replayBtn.style.display = 'none';
+      started = true;
       video.currentTime = 0;
       video.play().catch(function(){});
     }
@@ -1432,12 +1432,12 @@ function openVoteLightbox(workId){
     controls.style.display = 'none';
     var started = false;
     function playAnim(){
-      if(started) return; started = true;
       img.style.display = 'none';
       video.style.display = 'block';
       controls.style.display = 'flex';
       skipBtn.style.display = 'inline-block';
       replayBtn.style.display = 'none';
+      started = true;
       video.currentTime = 0;
       video.play().catch(function(){});
     }
@@ -1901,12 +1901,12 @@ function openNamingLightbox(workId){
     controls.style.display = 'none';
     var started = false;
     function playAnim(){
-      if(started) return; started = true;
       img.style.display = 'none';
       video.style.display = 'block';
       controls.style.display = 'flex';
       skipBtn.style.display = 'inline-block';
       replayBtn.style.display = 'none';
+      started = true;
       video.currentTime = 0;
       video.play().catch(function(){});
     }
