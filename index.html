@@ -274,15 +274,15 @@
     text-shadow:0 1px 2px rgba(0,0,0,.3);mix-blend-mode:difference;
   }
   .anim-controls{
-    position:absolute;bottom:-48px;left:50%;transform:translateX(-50%);
-    display:flex;gap:12px;pointer-events:auto;z-index:10;
+    position:absolute;top:12px;right:12px;
+    display:flex;gap:10px;pointer-events:auto;z-index:10;
   }
   .anim-controls button{
-    padding:8px 16px;border-radius:999px;border:1px solid rgba(192,192,200,.3);
-    background:rgba(255,255,255,.08);color:#c0c0c8;font-size:12px;cursor:pointer;
-    transition:all .2s ease;white-space:nowrap;
+    padding:6px 12px;border-radius:999px;border:1px solid rgba(192,192,200,.35);
+    background:rgba(0,0,0,.4);color:#c0c0c8;font-size:11px;cursor:pointer;
+    transition:all .2s ease;white-space:nowrap;backdrop-filter:blur(4px);
   }
-  .anim-controls button:hover{background:rgba(255,255,255,.15);color:#d0d0d8;border-color:rgba(192,192,200,.5)}
+  .anim-controls button:hover{background:rgba(0,0,0,.6);color:#d0d0d8;border-color:rgba(192,192,200,.6)}
   .lightbox .lb-close{
     position:absolute;top:24px;right:28px;
     width:44px;height:44px;border-radius:50%;
@@ -1291,75 +1291,12 @@ function openWorkLightbox(workId){
   }
 }
 
-function openLightboxByWork(w, type){
-  var video = document.getElementById(type+'-video');
-  var img = document.getElementById(type+'-img');
-  var controls = document.getElementById(type+'-anim-controls');
-  var skipBtn = document.getElementById(type+'-skip-btn');
-  var replayBtn = document.getElementById(type+'-replay-btn');
-  var wrap = video.closest('.'+type+'-img-wrap') || video.parentElement;
-
-  function showImage(){
-    video.classList.remove('visible');
-    video.style.display='none';
-    img.classList.add('visible');
-    img.style.display='block';
-    if(controls){
-      skipBtn.style.display='none';
-      replayBtn.style.display='inline-block';
-    }
-  }
-  function playAnim(){
-    img.classList.remove('visible');
-    img.style.display='none';
-    video.style.display='block';
-    video.classList.add('visible');
-    if(controls){
-      controls.style.display='flex';
-      skipBtn.style.display='inline-block';
-      replayBtn.style.display='none';
-    }
-    video.currentTime=0;
-    var p = video.play();
-    if(p && p.catch) p.catch(function(){});
-  }
-
-  if(controls){
-    skipBtn.onclick = function(e){ e.stopPropagation(); showImage(); };
-    replayBtn.onclick = function(e){ e.stopPropagation(); playAnim(); };
-  }
-  video.onended = showImage;
-  video.onerror = showImage;
-
-  img.src = w.full;
-  document.getElementById(type==='lb'?'lightbox':type==='vl'?'vote-lightbox':'naming-lightbox').classList.add('open');
-  document.body.style.overflow='hidden';
-
-  if(w.anim){
-    video.src = w.anim;
-    video.load();
-    // 先显示图片作为底图，视频就绪后切到视频
-    showImage();
-    var started=false;
-    function startPlay(){
-      if(started) return; started=true;
-      playAnim();
-    }
-    video.oncanplay = startPlay;
-    video.onloadeddata = startPlay;
-    // fallback: 如果视频 1.5 秒还没就绪，直接显示图片
-    setTimeout(function(){ if(!started) showImage(); }, 1500);
-  } else {
-    showImage();
-  }
-}
-
 function openLightbox(src){
   var img = document.getElementById('lightbox-img');
   var video = document.getElementById('lightbox-video');
   var controls = document.getElementById('lb-anim-controls');
-  img.src=src; img.classList.add('visible'); img.style.display='block';
-  video.classList.remove('visible'); video.style.display='none';
+  img.src=src; img.style.display='block';
+  video.style.display='none';
   if(controls) controls.style.display='none';
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow='hidden';
@@ -1369,7 +1306,6 @@ function closeLightbox(){
   document.body.style.overflow='';
   var video = document.getElementById('lightbox-video');
   if(video){ video.pause(); video.src=''; }
-  document.getElementById('lightbox-img').classList.remove('visible');
 }
 
 // ===== 图片保护 =====
