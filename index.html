@@ -247,9 +247,11 @@
   .lightbox .lb-img-wrap{
     position:relative;
     max-width:100%;max-height:100%;
-    display:flex;align-items:center;justify-content:center;
   }
-  .lightbox .lb-img-wrap img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;box-shadow:0 40px 80px -30px rgba(0,0,0,.8)}
+  .lightbox .lb-img-wrap img{
+    max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;
+    box-shadow:0 40px 80px -30px rgba(0,0,0,.8);display:block;
+  }
   .lightbox .watermark,
   .vote-lightbox .watermark,
   .naming-lightbox .watermark{
@@ -266,14 +268,14 @@
   .naming-lightbox .watermark::before{
     content:"yaoxuan.xin";
     position:absolute;
-    top:50%;left:50%;
-    transform:translate(-50%,-50%) rotate(-30deg);
-    font-size:min(80px,12vw);
-    font-weight:700;
+    bottom:14px;right:14px;top:auto;left:auto;
+    transform:none;
+    font-size:min(13px,3vw);
+    font-weight:500;
     color:#fff;
-    letter-spacing:.1em;
+    letter-spacing:.08em;
     white-space:nowrap;
-    text-shadow:0 0 30px rgba(0,0,0,.3);
+    text-shadow:0 1px 3px rgba(0,0,0,.4);
   }
   .lightbox .lb-close{
     position:absolute;top:24px;right:28px;
@@ -368,12 +370,11 @@
   .vote-lightbox .vl-img-wrap{
     position:relative;
     max-width:100%;max-height:calc(100vh - 140px);
-    display:flex;align-items:center;justify-content:center;
   }
   .vote-lightbox .vl-img-wrap img{
     max-width:100%;max-height:calc(100vh - 140px);
     object-fit:contain;border-radius:6px;
-    box-shadow:0 40px 80px -30px rgba(0,0,0,.8);
+    box-shadow:0 40px 80px -30px rgba(0,0,0,.8);display:block;
   }
 
   /* 左下角圆圈勾选 */
@@ -745,12 +746,11 @@
   }
   .naming-lightbox .nl-img-wrap{
     position:relative;max-width:100%;
-    display:flex;align-items:center;justify-content:center;
   }
   .naming-lightbox .nl-img-wrap img{
     max-width:100%;max-height:70vh;
     object-fit:contain;border-radius:6px;
-    box-shadow:0 40px 80px -30px rgba(0,0,0,.8);
+    box-shadow:0 40px 80px -30px rgba(0,0,0,.8);display:block;
   }
 
   /* 已采用名字展示区（锁定状态） */
@@ -957,10 +957,8 @@
     <button class="name-btn" id="name-open-btn">✦ Name</button>
     <button class="vote-btn" id="vote-open-btn"><span class="vote-dot"></span>Vote</button>
     <button class="vote-btn" id="leaderboard-btn">Rank</button>
-    <a href="#about">2026</a>
   </div>
-    <a href="#about">2026</a>
-  </div>
+</div>
 </nav>
 
 <main>
