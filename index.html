@@ -244,39 +244,26 @@
     padding:80px 40px;cursor:zoom-out;
   }
   .lightbox.open{display:flex;animation:fadeIn .35s ease}
-  .lightbox .lb-img-wrap{
-    position:relative;
-    max-width:100%;max-height:100%;
+  .lb-img-wrap,.vl-img-wrap,.nl-img-wrap{position:relative;display:inline-block;max-width:100%;max-height:100%}
+  .lb-img-wrap img,.vl-img-wrap img,.nl-img-wrap img{
+    display:block;max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;
+    box-shadow:0 40px 80px -30px rgba(0,0,0,.8);
   }
-  .lightbox .lb-img-wrap img{
-    max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;
-    box-shadow:0 40px 80px -30px rgba(0,0,0,.8);display:block;
+  .vote-lightbox .vl-img-wrap img{border-radius:6px;max-height:calc(100vh - 140px)}
+  .naming-lightbox .nl-img-wrap img{border-radius:6px;max-height:70vh}
+  .lb-img-wrap .watermark,
+  .vl-img-wrap .watermark,
+  .nl-img-wrap .watermark{
+    position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:3;user-select:none;
   }
-  .lightbox .watermark,
-  .vote-lightbox .watermark,
-  .naming-lightbox .watermark{
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    overflow:hidden;
-    z-index:3;
-    opacity:.18;
-    user-select:none;
-  }
-  .lightbox .watermark::before,
-  .vote-lightbox .watermark::before,
-  .naming-lightbox .watermark::before{
+  .lb-img-wrap .watermark::before,
+  .vl-img-wrap .watermark::before,
+  .nl-img-wrap .watermark::before{
     content:"yaoxuan.xin";
-    position:absolute;
-    bottom:14px;right:14px;top:auto;left:auto;
-    transform:none;
-    font-size:min(13px,3vw);
-    font-weight:500;
-    color:rgba(255,255,255,.5);
-    letter-spacing:.08em;
-    white-space:nowrap;
-    text-shadow:0 1px 4px rgba(0,0,0,.6);
-    mix-blend-mode:difference;
+    position:absolute;bottom:8px;right:10px;
+    font-size:min(11px,2.5vw);font-weight:400;
+    color:rgba(255,255,255,.32);letter-spacing:.06em;white-space:nowrap;
+    text-shadow:0 1px 2px rgba(0,0,0,.3);mix-blend-mode:difference;
   }
   .lightbox .lb-close{
     position:absolute;top:24px;right:28px;
@@ -367,16 +354,6 @@
     transition:all .25s;z-index:5;
   }
   .vote-lightbox .vl-close:hover{background:rgba(255,255,255,.1);color:var(--ink)}
-
-  .vote-lightbox .vl-img-wrap{
-    position:relative;
-    max-width:100%;max-height:calc(100vh - 140px);
-  }
-  .vote-lightbox .vl-img-wrap img{
-    max-width:100%;max-height:calc(100vh - 140px);
-    object-fit:contain;border-radius:6px;
-    box-shadow:0 40px 80px -30px rgba(0,0,0,.8);display:block;
-  }
 
   /* 左下角圆圈勾选 */
   .vote-lightbox .check-circle{
@@ -745,15 +722,6 @@
     max-width:900px;margin:0 auto;width:100%;
     display:flex;flex-direction:column;align-items:center;gap:0;
   }
-  .naming-lightbox .nl-img-wrap{
-    position:relative;max-width:100%;
-  }
-  .naming-lightbox .nl-img-wrap img{
-    max-width:100%;max-height:70vh;
-    object-fit:contain;border-radius:6px;
-    box-shadow:0 40px 80px -30px rgba(0,0,0,.8);display:block;
-  }
-
   /* 已采用名字展示区（锁定状态） */
   .naming-lightbox .adopted-section{
     max-width:600px;margin:16px auto 0;text-align:center;
