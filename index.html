@@ -556,6 +556,325 @@
     transition:width 1.2s cubic-bezier(.2,.7,.3,1);
   }
 
+  /* ---------- 作品名征集 — Name 按钮 ---------- */
+  .nav .name-btn{
+    padding:6px 16px;border-radius:999px;
+    border:1px solid rgba(244,162,97,.35);
+    font-size:12px;letter-spacing:.04em;
+    transition:all .25s ease;
+    white-space:nowrap;
+    background:linear-gradient(135deg,rgba(231,111,81,.08),rgba(244,162,97,.08));
+    color:#f4a261;
+  }
+  .nav .name-btn:hover{
+    background:linear-gradient(135deg,rgba(231,111,81,.15),rgba(244,162,97,.15));
+    border-color:rgba(244,162,97,.6);color:#f4a261;
+  }
+
+  /* ---------- 作品名征集 — 规则页 ---------- */
+  .naming-intro{
+    position:fixed;inset:0;z-index:170;
+    background:var(--bg);
+    display:none;flex-direction:column;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+  }
+  .naming-intro.open{display:flex;animation:fadeIn .3s ease}
+  .naming-intro-header{
+    position:sticky;top:0;z-index:10;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 28px;
+    background:linear-gradient(to bottom,var(--bg),rgba(10,10,11,.9) 70%,transparent);
+  }
+  .naming-intro-header .title{
+    font-size:14px;font-weight:500;color:var(--ink);letter-spacing:.02em;
+  }
+  .naming-intro-header .close-btn{
+    width:40px;height:40px;border-radius:50%;
+    border:1px solid var(--line);background:transparent;
+    color:var(--ink-2);font-size:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .25s;
+  }
+  .naming-intro-header .close-btn:hover{background:rgba(255,255,255,.06);color:var(--ink)}
+  .naming-intro-body{
+    max-width:560px;margin:0 auto;width:100%;
+    padding:20px 28px 120px;
+  }
+  .naming-intro-body h2{
+    font-size:22px;font-weight:500;color:var(--ink);
+    margin-bottom:4px;letter-spacing:.01em;
+  }
+  .naming-intro-body .subtitle{
+    font-size:12px;color:#f4a261;margin-bottom:32px;letter-spacing:.04em;
+  }
+  .naming-intro-body .section-title{
+    font-size:13px;color:var(--ink-2);font-weight:600;
+    margin:24px 0 12px;letter-spacing:.02em;
+  }
+  .naming-intro-body .rule-item{
+    font-size:13px;color:var(--ink-3);line-height:1.8;
+    padding-left:16px;position:relative;
+  }
+  .naming-intro-body .rule-item::before{
+    content:"·";position:absolute;left:4px;color:var(--ink-3);
+  }
+  .naming-intro-body .reward-item{
+    font-size:13px;color:var(--ink-2);line-height:1.8;
+    padding-left:16px;position:relative;
+  }
+  .naming-intro-body .reward-item::before{
+    content:"·";position:absolute;left:4px;color:#f4a261;
+  }
+  .naming-intro-body .heart-text{
+    font-size:13px;color:var(--ink-3);line-height:1.8;
+    margin-top:8px;
+  }
+  .naming-start-btn{
+    display:block;margin:40px auto 0;
+    padding:14px 44px;border-radius:999px;
+    background:linear-gradient(135deg,#e76f51,#f4a261);
+    color:#0a0a0b;border:none;
+    font-size:14px;font-weight:600;letter-spacing:.04em;
+    cursor:pointer;font-family:inherit;
+    transition:all .25s ease;
+  }
+  .naming-start-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 30px -8px rgba(244,162,97,.3);
+  }
+  .naming-start-btn:active{transform:scale(.97)}
+
+  /* ---------- 作品名征集 — 网格视图 ---------- */
+  .naming-view{
+    position:fixed;inset:0;z-index:175;
+    background:var(--bg);
+    display:none;flex-direction:column;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+  }
+  .naming-view.open{display:flex;animation:fadeIn .3s ease}
+  .naming-view-header{
+    position:sticky;top:0;z-index:10;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 28px;
+    background:linear-gradient(to bottom,var(--bg),rgba(10,10,11,.9) 70%,transparent);
+  }
+  .naming-view-header .title{
+    font-size:14px;font-weight:500;color:var(--ink);letter-spacing:.02em;
+  }
+  .naming-view-header .sub{
+    font-size:11px;color:var(--ink-3);margin-top:2px;
+  }
+  .naming-view-header .close-btn{
+    width:40px;height:40px;border-radius:50%;
+    border:1px solid var(--line);background:transparent;
+    color:var(--ink-2);font-size:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .25s;
+  }
+  .naming-view-header .close-btn:hover{background:rgba(255,255,255,.06);color:var(--ink)}
+  .naming-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    gap:8px;
+    padding:12px 28px 120px;
+    max-width:1000px;margin:0 auto;width:100%;
+  }
+  @media(min-width:768px){
+    .naming-grid{gap:12px;padding:12px 48px 120px}
+  }
+  .naming-thumb{
+    position:relative;border-radius:8px;overflow:hidden;
+    background:var(--bg-soft);cursor:pointer;
+    aspect-ratio:1;
+    transition:transform .25s ease;
+  }
+  .naming-thumb:hover{transform:scale(1.03)}
+  .naming-thumb.locked{
+    cursor:not-allowed;opacity:.5;
+  }
+  .naming-thumb.locked:hover{transform:none}
+  .naming-thumb img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+  .naming-thumb.named::after{
+    content:"";position:absolute;inset:0;
+    border:2px solid #f4a261;border-radius:8px;
+    pointer-events:none;
+  }
+  .naming-thumb .lock-badge{
+    position:absolute;top:8px;right:8px;
+    width:28px;height:28px;border-radius:50%;
+    background:rgba(0,0,0,.6);color:#f4a261;
+    font-size:12px;display:none;
+    align-items:center;justify-content:center;
+    backdrop-filter:blur(4px);
+  }
+  .naming-thumb.locked .lock-badge{display:flex}
+  .naming-thumb .named-count{
+    position:absolute;bottom:6px;left:6px;
+    font-size:9px;color:rgba(255,255,255,.6);
+    background:rgba(0,0,0,.5);padding:2px 6px;border-radius:4px;
+    backdrop-filter:blur(4px);
+  }
+
+  /* ---------- 作品名征集 — 大图预览（带输入框+名字展示） ---------- */
+  .naming-lightbox{
+    position:fixed;inset:0;z-index:200;
+    background:rgba(5,5,6,.97);
+    display:none;flex-direction:column;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+    padding:60px 20px 20px;
+  }
+  .naming-lightbox.open{display:flex;animation:fadeIn .3s ease}
+  .naming-lightbox .nl-close{
+    position:absolute;top:24px;right:28px;
+    width:44px;height:44px;border-radius:50%;
+    border:1px solid var(--line);background:rgba(255,255,255,.04);
+    color:var(--ink-2);font-size:18px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .25s;z-index:5;
+  }
+  .naming-lightbox .nl-close:hover{background:rgba(255,255,255,.1);color:var(--ink)}
+  .naming-lightbox .nl-inner{
+    max-width:900px;margin:0 auto;width:100%;
+    display:flex;flex-direction:column;align-items:center;gap:0;
+  }
+  .naming-lightbox .nl-img-wrap{
+    position:relative;max-width:100%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .naming-lightbox .nl-img-wrap img{
+    max-width:100%;max-height:70vh;
+    object-fit:contain;border-radius:6px;
+    box-shadow:0 40px 80px -30px rgba(0,0,0,.8);
+  }
+
+  /* 已采用名字展示区（锁定状态） */
+  .naming-lightbox .adopted-section{
+    max-width:600px;margin:16px auto 0;text-align:center;
+    display:none;
+  }
+  .naming-lightbox.locked .adopted-section{display:block}
+  .naming-lightbox.locked .submit-section{display:none}
+  .naming-lightbox.locked .names-wall{display:none}
+  .adopted-section .adopted-name{
+    font-size:20px;font-weight:500;color:#f4a261;
+    letter-spacing:.02em;margin-bottom:4px;
+  }
+  .adopted-section .adopted-label{
+    font-size:10px;color:var(--ink-3);letter-spacing:.08em;
+    text-transform:uppercase;margin-bottom:12px;
+  }
+  .adopted-section .adopted-note{
+    font-size:12px;color:var(--ink-2);line-height:1.7;
+    max-width:480px;margin:0 auto;
+  }
+
+  /* 提交区（未锁定状态） */
+  .naming-lightbox .submit-section{
+    max-width:600px;margin:20px auto 0;width:100%;
+    text-align:center;
+  }
+  .submit-section .input-row{
+    display:flex;gap:10px;justify-content:center;
+    margin-bottom:8px;
+  }
+  .submit-section input{
+    flex:1;max-width:400px;
+    padding:12px 16px;border-radius:10px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.04);
+    color:var(--ink);font-size:14px;font-family:inherit;
+    outline:none;transition:border-color .2s;
+  }
+  .submit-section input::placeholder{color:var(--ink-3)}
+  .submit-section input:focus{border-color:rgba(244,162,97,.4)}
+  .submit-section .submit-name-btn{
+    padding:12px 28px;border-radius:10px;
+    background:linear-gradient(135deg,#e76f51,#f4a261);
+    color:#0a0a0b;border:none;
+    font-size:13px;font-weight:600;letter-spacing:.02em;
+    cursor:pointer;font-family:inherit;
+    transition:all .2s ease;white-space:nowrap;
+  }
+  .submit-section .submit-name-btn:hover{
+    transform:translateY(-1px);
+    box-shadow:0 6px 20px -6px rgba(244,162,97,.3);
+  }
+  .submit-section .submit-name-btn:disabled{
+    opacity:.4;cursor:not-allowed;transform:none;
+  }
+  .submit-section .input-hint{
+    font-size:10px;color:var(--ink-3);margin-top:4px;
+  }
+  .submit-section .already-named{
+    font-size:11px;color:#f4a261;margin-top:8px;display:none;
+  }
+  .submit-section.already .already-named{display:block}
+  .submit-section.already input,
+  .submit-section.already .submit-name-btn{opacity:.4;pointer-events:none}
+
+  /* 用户提交名字墙（未锁定时展示在输入框下方） */
+  .naming-lightbox .names-wall{
+    max-width:600px;margin:20px auto 0;
+    text-align:center;display:none;
+  }
+  .naming-lightbox.has-names .names-wall{display:block}
+  .names-wall .nw-label{
+    font-size:10px;color:var(--ink-3);
+    letter-spacing:.06em;margin-bottom:10px;
+  }
+  .names-wall .nw-chips{
+    display:flex;flex-wrap:wrap;gap:6px 10px;
+    justify-content:center;
+  }
+  .names-wall .nw-chip{
+    font-size:11px;color:var(--ink-2);
+    padding:3px 10px;border-radius:6px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+    transition:all .2s;
+  }
+  .names-wall .nw-chip:hover{
+    background:rgba(255,255,255,.06);
+    color:var(--ink);
+  }
+
+  /* ---------- 取名成功弹窗 ---------- */
+  .naming-thanks{
+    position:fixed;inset:0;z-index:300;
+    background:rgba(5,5,6,.85);backdrop-filter:blur(8px);
+    display:none;align-items:center;justify-content:center;
+    cursor:pointer;
+  }
+  .naming-thanks.open{display:flex;animation:fadeIn .3s ease}
+  .naming-thanks-card{
+    background:var(--bg-soft);
+    border:1px solid rgba(244,162,97,.2);
+    border-radius:20px;
+    padding:48px 40px;
+    max-width:380px;width:calc(100% - 48px);
+    text-align:center;
+    cursor:default;
+    animation:rise .5s cubic-bezier(.2,.7,.3,1) both;
+  }
+  .naming-thanks-card .thanks-icon{
+    width:56px;height:56px;border-radius:50%;
+    background:linear-gradient(135deg,rgba(231,111,81,.15),rgba(244,162,97,.15));
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 20px;
+    font-size:26px;color:#f4a261;
+  }
+  .naming-thanks-card h3{
+    font-size:18px;font-weight:500;margin-bottom:10px;letter-spacing:.01em;color:var(--ink);
+  }
+  .naming-thanks-card p{
+    font-size:13px;color:var(--ink-2);line-height:1.7;
+  }
+  .naming-thanks-card .view-rules{
+    margin-top:16px;font-size:11px;color:#f4a261;
+    cursor:pointer;text-decoration:none;
+  }
+  .naming-thanks-card .view-rules:hover{text-decoration:underline}
+
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   @keyframes rise{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
   @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
@@ -597,6 +916,7 @@
     .nav .brand .en{font-size:9px}
     .nav .nav-right{gap:10px}
     .nav .vote-btn{padding:6px 12px}
+    .nav .name-btn{padding:6px 12px}
     .scroll-hint{margin-top:18px}
 
     .vote-grid{grid-template-columns:repeat(3,1fr);gap:6px;padding:8px 16px 100px}
@@ -608,6 +928,14 @@
     .lb-item .lb-thumb{width:40px;height:40px}
     .lb-item .lb-rank{width:26px;font-size:15px}
     .lb-item .lb-name{font-size:12px}
+    .naming-grid{grid-template-columns:repeat(3,1fr);gap:6px;padding:8px 16px 100px}
+    .naming-thumb .lock-badge{width:22px;height:22px;font-size:10px;top:6px;right:6px}
+    .naming-intro-body{padding:16px 20px 100px}
+    .naming-thanks-card{padding:36px 28px}
+    .naming-lightbox{padding:50px 16px 16px}
+    .naming-lightbox .nl-img-wrap img{max-height:55vh}
+    .submit-section input{font-size:13px;padding:10px 14px}
+    .submit-section .submit-name-btn{padding:10px 20px;font-size:12px}
   }
 </style>
 </head>
@@ -622,6 +950,7 @@
   <div class="nav-right">
     <button class="vote-btn" id="vote-open-btn"><span class="vote-dot"></span>Vote</button>
     <button class="vote-btn" id="leaderboard-btn">Rank</button>
+    <button class="name-btn" id="name-open-btn">✦ Name</button>
     <a href="#about">2026</a>
   </div>
 </nav>
@@ -780,6 +1109,84 @@
   </div>
 </div>
 
+<!-- ========== 作品名征集 — 规则页 ========== -->
+<div class="naming-intro" id="naming-intro">
+  <div class="naming-intro-header">
+    <div class="title">作品名征集</div>
+    <button class="close-btn" id="ni-close-btn">&#x2715;</button>
+  </div>
+  <div class="naming-intro-body">
+    <h2>✦ 为我的作品取名</h2>
+    <div class="subtitle">Work Naming Event</div>
+
+    <div class="section-title">规则</div>
+    <div class="rule-item">每张作品都在征集名字，你可以为任意一张取一个名字</div>
+    <div class="rule-item">每人每张作品只能提交一次</div>
+    <div class="rule-item">如果某张作品已确定正式名字，该作品将不再接受提交</div>
+
+    <div class="section-title">奖励</div>
+    <div class="reward-item">被采用名字的提交者，可获得任选方形尺寸艺术微喷版画一张</div>
+    <div class="reward-item">请不定时回来查看你取名过的作品 — 大图下方会显示采用结果</div>
+    <div class="reward-item">看到自己的名字被采用后，主动邮件联系我领奖</div>
+
+    <div class="section-title">我的心愿</div>
+    <div class="heart-text">希望你能多停留、多感受每张画面 — 名字是感受的延伸。</div>
+
+    <button class="naming-start-btn" id="naming-start-btn">开始取名</button>
+  </div>
+</div>
+
+<!-- ========== 作品名征集 — 网格视图 ========== -->
+<div class="naming-view" id="naming-view">
+  <div class="naming-view-header">
+    <div>
+      <div class="title">为作品取名</div>
+      <div class="sub">点击缩略图查看大图并取名 · 已确定名字的作品不可再取名</div>
+    </div>
+    <button class="close-btn" id="nv-close-btn">&#x2715;</button>
+  </div>
+  <div class="naming-grid" id="naming-grid"></div>
+</div>
+
+<!-- ========== 作品名征集 — 大图预览（带输入框+名字展示） ========== -->
+<div class="naming-lightbox" id="naming-lightbox">
+  <button class="nl-close" id="nl-close">&#x2715;</button>
+  <div class="nl-inner">
+    <div class="nl-img-wrap">
+      <img id="nl-img" src="" alt="">
+    </div>
+    <!-- 已采用名字展示（锁定状态） -->
+    <div class="adopted-section" id="adopted-section">
+      <div class="adopted-name" id="adopted-name"></div>
+      <div class="adopted-label">— adopted name —</div>
+      <div class="adopted-note" id="adopted-note"></div>
+    </div>
+    <!-- 提交区（未锁定状态） -->
+    <div class="submit-section" id="submit-section">
+      <div class="input-row">
+        <input type="text" id="naming-input" placeholder="输入你心中的名字..." maxlength="20">
+        <button class="submit-name-btn" id="submit-name-btn">提交</button>
+      </div>
+      <div class="input-hint">最多 20 字 · 每张作品限一次</div>
+      <div class="already-named">你已为这张作品取过名字</div>
+    </div>
+    <!-- 用户提交名字墙 -->
+    <div class="names-wall" id="names-wall">
+      <div class="nw-label">大家取的名字</div>
+      <div class="nw-chips" id="nw-chips"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 取名成功弹窗 ========== -->
+<div class="naming-thanks" id="naming-thanks">
+  <div class="naming-thanks-card">
+    <div class="thanks-icon">✦</div>
+    <h3>提交成功</h3>
+    <p>请期待结果<br>详情请查看规则页</p>
+  </div>
+</div>
+
 <script>
 // ===== 作品数据 =====
 var WORKS = [
@@ -834,6 +1241,10 @@ document.addEventListener('keydown',function(e){
   if(e.key==='F12'){e.preventDefault();return false;}
   if((e.ctrlKey||e.metaKey)&&e.shiftKey&&(e.key==='I'||e.key==='i')){e.preventDefault();return false;}
   if(e.key==='Escape'){
+    if(document.getElementById('naming-thanks').classList.contains('open')){closeNamingThanks();return;}
+    if(document.getElementById('naming-lightbox').classList.contains('open')){closeNamingLightbox();return;}
+    if(document.getElementById('naming-view').classList.contains('open')){closeNamingView();return;}
+    if(document.getElementById('naming-intro').classList.contains('open')){closeNamingIntro();return;}
     if(document.getElementById('vote-thanks').classList.contains('open')){closeVoteThanks();return;}
     if(document.getElementById('leaderboard-view').classList.contains('open')){closeLeaderboard();return;}
     if(document.getElementById('vote-lightbox').classList.contains('open')){closeVoteLightbox();return;}
@@ -1234,6 +1645,285 @@ document.getElementById('vote-lightbox').addEventListener('click', function(e){
 document.getElementById('vote-thanks').addEventListener('click', function(e){
   if(e.target === this){
     closeVoteThanks();
+  }
+});
+
+/* ============================================================
+ * 作品名征集系统 — 无需登录，点缩略图大图预览，输入名字提交
+ * 后端：Cloudflare Worker + KV（与投票共用同一 Worker）
+ * ============================================================ */
+
+// 取名数据缓存
+var namingData = {};  // { w32: { names: ["名字1","名字2"], adopted: {name,note}, locked: false } }
+var currentNlWorkId = null;
+
+// 检查是否已为某张作品取过名（localStorage 记录）
+function hasNamed(workId){
+  var stored = localStorage.getItem('yaoxuan_named');
+  var arr = stored ? JSON.parse(stored) : [];
+  return arr.indexOf(workId) >= 0;
+}
+
+// 记录已取名
+function markNamed(workId){
+  var stored = localStorage.getItem('yaoxuan_named');
+  var arr = stored ? JSON.parse(stored) : [];
+  if(arr.indexOf(workId) < 0){
+    arr.push(workId);
+    localStorage.setItem('yaoxuan_named', JSON.stringify(arr));
+  }
+}
+
+// 获取已取名列表
+function getNamedList(){
+  var stored = localStorage.getItem('yaoxuan_named');
+  return stored ? JSON.parse(stored) : [];
+}
+
+// 打开规则页
+function openNamingIntro(){
+  document.getElementById('naming-intro').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeNamingIntro(){
+  document.getElementById('naming-intro').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// 从规则页进入网格
+function openNamingView(){
+  closeNamingIntro();
+  // 先获取所有取名数据
+  fetchNamingData(function(){
+    document.getElementById('naming-view').classList.add('open');
+    document.body.style.overflow='hidden';
+    renderNamingGrid();
+  });
+}
+function closeNamingView(){
+  document.getElementById('naming-view').classList.remove('open');
+  document.body.style.overflow='';
+  closeNamingLightbox();
+}
+
+// 获取所有取名数据
+function fetchNamingData(callback){
+  fetch(API_BASE + '/api/names')
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if(data.success){
+        namingData = data.works || {};
+      }
+      if(callback) callback();
+    })
+    .catch(function(){
+      if(callback) callback();
+    });
+}
+
+// 渲染取名网格
+function renderNamingGrid(){
+  var grid = document.getElementById('naming-grid');
+  var namedList = getNamedList();
+
+  grid.innerHTML = WORKS.map(function(w){
+    var data = namingData[w.id] || {};
+    var isLocked = data.locked || false;
+    var isNamed = namedList.indexOf(w.id) >= 0;
+    var nameCount = data.names ? data.names.length : 0;
+
+    var classes = 'naming-thumb';
+    if(isLocked) classes += ' locked';
+    if(isNamed) classes += ' named';
+
+    var lockBadge = '<div class="lock-badge">🔒</div>';
+    var countBadge = '';
+    if(!isLocked && nameCount > 0){
+      countBadge = '<div class="named-count">' + nameCount + ' 个名字</div>';
+    }
+
+    return '<div class="' + classes + '" data-work-id="' + w.id + '" data-full="' + w.full + '">' +
+      '<img src="' + w.thumb + '" alt="作品 ' + w.num + '">' +
+      lockBadge + countBadge +
+    '</div>';
+  }).join('');
+
+  // 绑定点击
+  grid.querySelectorAll('.naming-thumb').forEach(function(el){
+    if(el.classList.contains('locked')) return;
+    el.addEventListener('click', function(){
+      var workId = el.getAttribute('data-work-id');
+      openNamingLightbox(workId);
+    });
+  });
+}
+
+// 打开取名大图预览
+function openNamingLightbox(workId){
+  currentNlWorkId = workId;
+  var w = WORKS.find(function(x){return x.id===workId});
+  if(!w) return;
+
+  var lb = document.getElementById('naming-lightbox');
+  var data = namingData[workId] || {};
+
+  // 设置图片
+  document.getElementById('nl-img').src = w.full;
+
+  // 清除之前的类
+  lb.classList.remove('locked', 'has-names');
+
+  // 检查是否锁定
+  if(data.locked && data.adopted){
+    lb.classList.add('locked');
+    document.getElementById('adopted-name').textContent = '「' + data.adopted.name + '」';
+    document.getElementById('adopted-note').textContent = data.adopted.note || '';
+  } else {
+    // 未锁定 — 显示输入框和名字墙
+    var submitSection = document.getElementById('submit-section');
+    submitSection.classList.remove('already');
+
+    // 检查是否已取过名
+    if(hasNamed(workId)){
+      submitSection.classList.add('already');
+    }
+
+    // 清空输入框
+    document.getElementById('naming-input').value = '';
+
+    // 渲染已有名字墙
+    renderNamesWall(data.names || []);
+
+    if(data.names && data.names.length > 0){
+      lb.classList.add('has-names');
+    }
+  }
+
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeNamingLightbox(){
+  document.getElementById('naming-lightbox').classList.remove('open');
+  document.body.style.overflow='';
+  // 刷新网格状态
+  if(document.getElementById('naming-view').classList.contains('open')){
+    renderNamingGrid();
+  }
+}
+
+// 渲染名字墙（随机排列）
+function renderNamesWall(names){
+  var chipsEl = document.getElementById('nw-chips');
+  if(!names || names.length === 0){
+    chipsEl.innerHTML = '';
+    return;
+  }
+  // 随机排列
+  var shuffled = names.slice().sort(function(){ return Math.random() - 0.5; });
+  chipsEl.innerHTML = shuffled.map(function(n){
+    return '<div class="nw-chip">' + escapeHtml(n) + '</div>';
+  }).join('');
+}
+
+// HTML 转义
+function escapeHtml(text){
+  var div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// 提交名字
+function submitNaming(){
+  if(!currentNlWorkId) return;
+  var input = document.getElementById('naming-input');
+  var name = input.value.trim();
+  if(!name){
+    input.focus();
+    return;
+  }
+  if(name.length > 20){
+    return;
+  }
+
+  var btn = document.getElementById('submit-name-btn');
+  btn.disabled = true;
+  btn.textContent = '提交中...';
+
+  fetch(API_BASE + '/api/naming', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ workId: currentNlWorkId, name: name })
+  })
+  .then(function(res){ return res.json(); })
+  .then(function(data){
+    btn.disabled = false;
+    btn.textContent = '提交';
+
+    if(data.error){
+      if(data.alreadyNamed){
+        // 已取过名
+        document.getElementById('submit-section').classList.add('already');
+        markNamed(currentNlWorkId);
+      } else {
+        alert(data.error);
+      }
+      return;
+    }
+
+    // 成功
+    markNamed(currentNlWorkId);
+
+    // 更新本地缓存
+    if(!namingData[currentNlWorkId]) namingData[currentNlWorkId] = {};
+    if(!namingData[currentNlWorkId].names) namingData[currentNlWorkId].names = [];
+    namingData[currentNlWorkId].names.push(name);
+
+    // 关闭大图，显示成功弹窗
+    closeNamingLightbox();
+    showNamingThanks();
+  })
+  .catch(function(){
+    btn.disabled = false;
+    btn.textContent = '提交';
+    alert('网络错误，请稍后重试');
+  });
+}
+
+// 显示成功弹窗
+function showNamingThanks(){
+  document.getElementById('naming-thanks').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeNamingThanks(){
+  document.getElementById('naming-thanks').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// ===== Escape 键关闭 =====
+
+// ===== 取名事件绑定 =====
+document.getElementById('name-open-btn').addEventListener('click', openNamingIntro);
+document.getElementById('ni-close-btn').addEventListener('click', closeNamingIntro);
+document.getElementById('naming-start-btn').addEventListener('click', openNamingView);
+document.getElementById('nv-close-btn').addEventListener('click', closeNamingView);
+document.getElementById('nl-close').addEventListener('click', closeNamingLightbox);
+document.getElementById('submit-name-btn').addEventListener('click', submitNaming);
+document.getElementById('naming-input').addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){ e.preventDefault(); submitNaming(); }
+});
+
+// 点取名大图背景关闭
+document.getElementById('naming-lightbox').addEventListener('click', function(e){
+  if(e.target === this){
+    closeNamingLightbox();
+  }
+});
+
+// 点成功弹窗空白关闭
+document.getElementById('naming-thanks').addEventListener('click', function(e){
+  if(e.target === this){
+    closeNamingThanks();
   }
 });
 </script>
