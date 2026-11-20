@@ -1289,7 +1289,17 @@ function openLightboxByWork(w, type){
   if(w.anim){
     video.src = w.anim;
     video.load();
-    video.onloadeddata = function(){ playAnim(); };
+    // 先显示图片作为底图，视频就绪后切到视频
+    showImage();
+    var started=false;
+    function startPlay(){
+      if(started) return; started=true;
+      playAnim();
+    }
+    video.oncanplay = startPlay;
+    video.onloadeddata = startPlay;
+    // fallback: 如果视频 1.5 秒还没就绪，直接显示图片
+    setTimeout(function(){ if(!started) showImage(); }, 1500);
   } else {
     showImage();
   }
