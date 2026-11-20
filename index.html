@@ -247,15 +247,13 @@
   .lightbox.open{display:flex;animation:fadeIn .35s ease}
   .lb-img-wrap,.vl-img-wrap,.nl-img-wrap{position:relative;display:inline-block;max-width:100%;max-height:100%}
   .lb-img-wrap img,.vl-img-wrap img,.nl-img-wrap img{
-    display:none;max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;
+    display:block;max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;
     box-shadow:0 40px 80px -30px rgba(0,0,0,.8);
   }
-  .lb-img-wrap img.visible,.vl-img-wrap img.visible,.nl-img-wrap img.visible{display:block}
   .lb-img-wrap video,.vl-img-wrap video,.nl-img-wrap video{
     display:none;max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;
     box-shadow:0 40px 80px -30px rgba(0,0,0,.8);background:#000;
   }
-  .lb-img-wrap video.visible,.vl-img-wrap video.visible,.nl-img-wrap video.visible{display:block}
   .vote-lightbox .vl-img-wrap img{border-radius:6px;max-height:calc(100vh - 140px)}
   .vote-lightbox .vl-img-wrap video{border-radius:6px;max-height:calc(100vh - 140px)}
   .naming-lightbox .nl-img-wrap img{border-radius:6px;max-height:70vh}
@@ -963,7 +961,7 @@
       <!-- 右眼 -->
       <div class="smiley-cell cell-5" onclick="openLightbox('https://yaoxuan.xin/images/full/new-361515.jpg?v=7')"><img src="https://yaoxuan.xin/images/web/new-361515.jpg?v=7" alt="作品 36"></div>
       <div class="smiley-cell cell-6" onclick="openLightbox('https://yaoxuan.xin/images/full/new-371515.jpg?v=7')"><img src="https://yaoxuan.xin/images/web/new-371515.jpg?v=7" alt="作品 37"></div>
-      <div class="smiley-cell cell-7" onclick="alert('test w38'); openWorkLightbox('w38')"><img src="https://yaoxuan.xin/images/web/new-381515.jpg?v=7" alt="作品 38"></div>
+      <div class="smiley-cell cell-7" onclick="openWorkLightbox('w38')"><img src="https://yaoxuan.xin/images/web/new-381515.jpg?v=7" alt="作品 38"></div>
       <div class="smiley-cell cell-8" onclick="openLightbox('https://yaoxuan.xin/images/full/new-391515.jpg?v=7')"><img src="https://yaoxuan.xin/images/web/new-391515.jpg?v=7" alt="作品 39"></div>
       <!-- 鼻子 -->
       <div class="smiley-cell cell-9" onclick="openLightbox('https://yaoxuan.xin/images/full/new-401515.jpg?v=7')"><img src="https://yaoxuan.xin/images/web/new-401515.jpg?v=7" alt="作品 40"></div>
@@ -1240,7 +1238,57 @@ var currentVlWorkId = null; // 当前大图预览的作品 id
 function openWorkLightbox(workId){
   var w = WORKS.find(function(x){return x.id===workId});
   if(!w) return;
-  openLightboxByWork(w, 'lb');
+  var lb = document.getElementById('lightbox');
+  var img = document.getElementById('lightbox-img');
+  var video = document.getElementById('lightbox-video');
+  var controls = document.getElementById('lb-anim-controls');
+  var skipBtn = document.getElementById('lb-skip-btn');
+  var replayBtn = document.getElementById('lb-replay-btn');
+
+  // 先显示图片
+  img.src = w.full;
+  img.style.display = 'block';
+
+  // 打开灯箱
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+
+  if(w.anim && video){
+    // 先显示图片，视频准备好再切换
+    video.style.display = 'none';
+    controls.style.display = 'none';
+
+    var started = false;
+    function playAnim(){
+      if(started) return; started = true;
+      img.style.display = 'none';
+      video.style.display = 'block';
+      controls.style.display = 'flex';
+      skipBtn.style.display = 'inline-block';
+      replayBtn.style.display = 'none';
+      video.currentTime = 0;
+      video.play().catch(function(){});
+    }
+    function showImage(){
+      video.style.display = 'none';
+      img.style.display = 'block';
+      if(started){
+        skipBtn.style.display = 'none';
+        replayBtn.style.display = 'inline-block';
+      }
+    }
+
+    skipBtn.onclick = function(e){ e.stopPropagation(); showImage(); };
+    replayBtn.onclick = function(e){ e.stopPropagation(); playAnim(); };
+    video.onended = showImage;
+    video.onerror = showImage;
+
+    video.src = w.anim;
+    video.load();
+    video.oncanplay = playAnim;
+    video.onloadeddata = playAnim;
+    setTimeout(function(){ if(!started) showImage(); }, 2000);
+  }
 }
 
 function openLightboxByWork(w, type){
@@ -1429,7 +1477,46 @@ function openVoteLightbox(workId){
   currentVlWorkId = workId;
   var w = WORKS.find(function(x){return x.id===workId});
   if(!w) return;
-  openLightboxByWork(w, 'vl');
+  var lb = document.getElementById('vote-lightbox');
+  var img = document.getElementById('vl-img');
+  var video = document.getElementById('vl-video');
+  var controls = document.getElementById('vl-anim-controls');
+  var skipBtn = document.getElementById('vl-skip-btn');
+  var replayBtn = document.getElementById('vl-replay-btn');
+
+  img.src = w.full;
+  img.style.display = 'block';
+  lb.classList.add('open');
+
+  if(w.anim && video){
+    video.style.display = 'none';
+    controls.style.display = 'none';
+    var started = false;
+    function playAnim(){
+      if(started) return; started = true;
+      img.style.display = 'none';
+      video.style.display = 'block';
+      controls.style.display = 'flex';
+      skipBtn.style.display = 'inline-block';
+      replayBtn.style.display = 'none';
+      video.currentTime = 0;
+      video.play().catch(function(){});
+    }
+    function showImage(){
+      video.style.display = 'none';
+      img.style.display = 'block';
+      if(started){ skipBtn.style.display='none'; replayBtn.style.display='inline-block'; }
+    }
+    skipBtn.onclick = function(e){ e.stopPropagation(); showImage(); };
+    replayBtn.onclick = function(e){ e.stopPropagation(); playAnim(); };
+    video.onended = showImage;
+    video.onerror = showImage;
+    video.src = w.anim;
+    video.load();
+    video.oncanplay = playAnim;
+    video.onloadeddata = playAnim;
+    setTimeout(function(){ if(!started) showImage(); }, 2000);
+  }
   updateCheckCircle();
 }
 
@@ -1860,7 +1947,45 @@ function openNamingLightbox(workId){
   var lb = document.getElementById('naming-lightbox');
   var data = namingData[workId] || {};
 
-  openLightboxByWork(w, 'nl');
+  // 设置图片和动画
+  var img = document.getElementById('nl-img');
+  var video = document.getElementById('nl-video');
+  var controls = document.getElementById('nl-anim-controls');
+  var skipBtn = document.getElementById('nl-skip-btn');
+  var replayBtn = document.getElementById('nl-replay-btn');
+
+  img.src = w.full;
+  img.style.display = 'block';
+
+  if(w.anim && video){
+    video.style.display = 'none';
+    controls.style.display = 'none';
+    var started = false;
+    function playAnim(){
+      if(started) return; started = true;
+      img.style.display = 'none';
+      video.style.display = 'block';
+      controls.style.display = 'flex';
+      skipBtn.style.display = 'inline-block';
+      replayBtn.style.display = 'none';
+      video.currentTime = 0;
+      video.play().catch(function(){});
+    }
+    function showImage(){
+      video.style.display = 'none';
+      img.style.display = 'block';
+      if(started){ skipBtn.style.display='none'; replayBtn.style.display='inline-block'; }
+    }
+    skipBtn.onclick = function(e){ e.stopPropagation(); showImage(); };
+    replayBtn.onclick = function(e){ e.stopPropagation(); playAnim(); };
+    video.onended = showImage;
+    video.onerror = showImage;
+    video.src = w.anim;
+    video.load();
+    video.oncanplay = playAnim;
+    video.onloadeddata = playAnim;
+    setTimeout(function(){ if(!started) showImage(); }, 2000);
+  }
 
   // 清除之前的类
   lb.classList.remove('locked', 'has-names');
