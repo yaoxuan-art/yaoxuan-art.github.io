@@ -246,11 +246,19 @@
   .lightbox.open{display:flex;animation:fadeIn .35s ease}
   .lb-img-wrap,.vl-img-wrap,.nl-img-wrap{position:relative;display:inline-block;max-width:100%;max-height:100%}
   .lb-img-wrap img,.vl-img-wrap img,.nl-img-wrap img{
-    display:block;max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;
+    display:none;max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;
     box-shadow:0 40px 80px -30px rgba(0,0,0,.8);
   }
+  .lb-img-wrap img.visible,.vl-img-wrap img.visible,.nl-img-wrap img.visible{display:block}
+  .lb-img-wrap video,.vl-img-wrap video,.nl-img-wrap video{
+    display:none;max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;
+    box-shadow:0 40px 80px -30px rgba(0,0,0,.8);background:#000;
+  }
+  .lb-img-wrap video.visible,.vl-img-wrap video.visible,.nl-img-wrap video.visible{display:block}
   .vote-lightbox .vl-img-wrap img{border-radius:6px;max-height:calc(100vh - 140px)}
+  .vote-lightbox .vl-img-wrap video{border-radius:6px;max-height:calc(100vh - 140px)}
   .naming-lightbox .nl-img-wrap img{border-radius:6px;max-height:70vh}
+  .naming-lightbox .nl-img-wrap video{border-radius:6px;max-height:70vh}
   .lb-img-wrap .watermark,
   .vl-img-wrap .watermark,
   .nl-img-wrap .watermark{
@@ -266,6 +274,16 @@
     color:rgba(255,255,255,.28);letter-spacing:.06em;white-space:nowrap;
     text-shadow:0 1px 2px rgba(0,0,0,.3);mix-blend-mode:difference;
   }
+  .anim-controls{
+    position:absolute;bottom:-48px;left:50%;transform:translateX(-50%);
+    display:flex;gap:12px;pointer-events:auto;z-index:10;
+  }
+  .anim-controls button{
+    padding:8px 16px;border-radius:999px;border:1px solid rgba(192,192,200,.3);
+    background:rgba(255,255,255,.08);color:#c0c0c8;font-size:12px;cursor:pointer;
+    transition:all .2s ease;white-space:nowrap;
+  }
+  .anim-controls button:hover{background:rgba(255,255,255,.15);color:#d0d0d8;border-color:rgba(192,192,200,.5)}
   .lightbox .lb-close{
     position:absolute;top:24px;right:28px;
     width:44px;height:44px;border-radius:50%;
@@ -944,7 +962,7 @@
       <!-- 右眼 -->
       <div class="smiley-cell cell-5" onclick="openLightbox('https://yaoxuan.xin/images/full/new-361515.jpg?v=7')"><img src="https://yaoxuan.xin/images/web/new-361515.jpg?v=7" alt="作品 36"></div>
       <div class="smiley-cell cell-6" onclick="openLightbox('https://yaoxuan.xin/images/full/new-371515.jpg?v=7')"><img src="https://yaoxuan.xin/images/web/new-371515.jpg?v=7" alt="作品 37"></div>
-      <div class="smiley-cell cell-7" onclick="openLightbox('https://yaoxuan.xin/images/full/new-381515.jpg?v=7')"><img src="https://yaoxuan.xin/images/web/new-381515.jpg?v=7" alt="作品 38"></div>
+      <div class="smiley-cell cell-7" onclick="openWorkLightbox('w38')"><img src="https://yaoxuan.xin/images/web/new-381515.jpg?v=7" alt="作品 38"></div>
       <div class="smiley-cell cell-8" onclick="openLightbox('https://yaoxuan.xin/images/full/new-391515.jpg?v=7')"><img src="https://yaoxuan.xin/images/web/new-391515.jpg?v=7" alt="作品 39"></div>
       <!-- 鼻子 -->
       <div class="smiley-cell cell-9" onclick="openLightbox('https://yaoxuan.xin/images/full/new-401515.jpg?v=7')"><img src="https://yaoxuan.xin/images/web/new-401515.jpg?v=7" alt="作品 40"></div>
@@ -1021,8 +1039,13 @@
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <div class="lb-close">✕</div>
   <div class="lb-img-wrap">
+    <video id="lightbox-video" muted playsinline preload="auto" style="display:none"></video>
     <img id="lightbox-img" src="" alt="">
     <div class="watermark"></div>
+    <div class="anim-controls" id="lb-anim-controls" style="display:none">
+      <button class="anim-skip" id="lb-skip-btn">跳过动画</button>
+      <button class="anim-replay" id="lb-replay-btn" style="display:none">重播动画</button>
+    </div>
   </div>
 </div>
 
@@ -1042,8 +1065,13 @@
 <div class="vote-lightbox" id="vote-lightbox">
   <button class="vl-close" id="vl-close">✕</button>
   <div class="vl-img-wrap">
+    <video id="vl-video" muted playsinline preload="auto" style="display:none"></video>
     <img id="vl-img" src="" alt="">
     <div class="watermark"></div>
+    <div class="anim-controls" id="vl-anim-controls" style="display:none">
+      <button class="anim-skip" id="vl-skip-btn">跳过动画</button>
+      <button class="anim-replay" id="vl-replay-btn" style="display:none">重播动画</button>
+    </div>
     <div class="check-circle" id="check-circle">
       <span class="check-mark">✓</span>
       <span class="check-num"></span>
@@ -1133,8 +1161,13 @@
   <button class="nl-close" id="nl-close">&#x2715;</button>
   <div class="nl-inner">
     <div class="nl-img-wrap">
+      <video id="nl-video" muted playsinline preload="auto" style="display:none"></video>
       <img id="nl-img" src="" alt="">
       <div class="watermark"></div>
+      <div class="anim-controls" id="nl-anim-controls" style="display:none">
+        <button class="anim-skip" id="nl-skip-btn">跳过动画</button>
+        <button class="anim-replay" id="nl-replay-btn" style="display:none">重播动画</button>
+      </div>
     </div>
     <!-- 已采用名字展示（锁定状态） -->
     <div class="adopted-section" id="adopted-section">
@@ -1177,7 +1210,7 @@ var WORKS = [
   {id:'w35',num:35,thumb:'images/web/new-35.jpg?v=7',full:'images/full/new-35.jpg?v=7'},
   {id:'w36',num:36,thumb:'images/web/new-36.jpg?v=7',full:'images/full/new-36.jpg?v=7'},
   {id:'w37',num:37,thumb:'images/web/new-37.jpg?v=7',full:'images/full/new-37.jpg?v=7'},
-  {id:'w38',num:38,thumb:'images/web/new-38.jpg?v=7',full:'images/full/new-38.jpg?v=7'},
+  {id:'w38',num:38,thumb:'images/web/new-38.jpg?v=7',full:'images/full/new-38.jpg?v=7',anim:'images/anim/w38.mp4'},
   {id:'w39',num:39,thumb:'images/web/new-39.jpg?v=7',full:'images/full/new-39.jpg?v=7'},
   {id:'w40',num:40,thumb:'images/web/new-40.jpg?v=7',full:'images/full/new-40.jpg?v=7'},
   {id:'w41',num:41,thumb:'images/web/new-41.jpg?v=7',full:'images/full/new-41.jpg?v=7'},
@@ -1203,14 +1236,81 @@ var voteSelections = []; // 存 work id，顺序代表选择顺序
 var currentVlWorkId = null; // 当前大图预览的作品 id
 
 // ===== 原灯箱（首页笑脸） =====
+function openWorkLightbox(workId){
+  var w = WORKS.find(function(x){return x.id===workId});
+  if(!w) return;
+  openLightboxByWork(w, 'lb');
+}
+
+function openLightboxByWork(w, type){
+  var video = document.getElementById(type+'-video');
+  var img = document.getElementById(type+'-img');
+  var controls = document.getElementById(type+'-anim-controls');
+  var skipBtn = document.getElementById(type+'-skip-btn');
+  var replayBtn = document.getElementById(type+'-replay-btn');
+  var wrap = video.closest('.'+type+'-img-wrap') || video.parentElement;
+
+  function showImage(){
+    video.classList.remove('visible');
+    video.style.display='none';
+    img.classList.add('visible');
+    img.style.display='block';
+    if(controls){
+      skipBtn.style.display='none';
+      replayBtn.style.display='inline-block';
+    }
+  }
+  function playAnim(){
+    img.classList.remove('visible');
+    img.style.display='none';
+    video.style.display='block';
+    video.classList.add('visible');
+    if(controls){
+      controls.style.display='flex';
+      skipBtn.style.display='inline-block';
+      replayBtn.style.display='none';
+    }
+    video.currentTime=0;
+    var p = video.play();
+    if(p && p.catch) p.catch(function(){});
+  }
+
+  if(controls){
+    skipBtn.onclick = function(e){ e.stopPropagation(); showImage(); };
+    replayBtn.onclick = function(e){ e.stopPropagation(); playAnim(); };
+  }
+  video.onended = showImage;
+  video.onerror = showImage;
+
+  img.src = w.full;
+  document.getElementById(type==='lb'?'lightbox':type==='vl'?'vote-lightbox':'naming-lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+
+  if(w.anim){
+    video.src = w.anim;
+    video.load();
+    video.onloadeddata = function(){ playAnim(); };
+  } else {
+    showImage();
+  }
+}
+
 function openLightbox(src){
-  document.getElementById('lightbox-img').src=src;
+  var img = document.getElementById('lightbox-img');
+  var video = document.getElementById('lightbox-video');
+  var controls = document.getElementById('lb-anim-controls');
+  img.src=src; img.classList.add('visible'); img.style.display='block';
+  video.classList.remove('visible'); video.style.display='none';
+  if(controls) controls.style.display='none';
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow='hidden';
 }
 function closeLightbox(){
   document.getElementById('lightbox').classList.remove('open');
   document.body.style.overflow='';
+  var video = document.getElementById('lightbox-video');
+  if(video){ video.pause(); video.src=''; }
+  document.getElementById('lightbox-img').classList.remove('visible');
 }
 
 // ===== 图片保护 =====
@@ -1318,13 +1418,14 @@ function openVoteLightbox(workId){
   currentVlWorkId = workId;
   var w = WORKS.find(function(x){return x.id===workId});
   if(!w) return;
-  document.getElementById('vl-img').src = w.full;
+  openLightboxByWork(w, 'vl');
   updateCheckCircle();
-  document.getElementById('vote-lightbox').classList.add('open');
 }
 
 function closeVoteLightbox(){
   document.getElementById('vote-lightbox').classList.remove('open');
+  var video = document.getElementById('vl-video');
+  if(video){ video.pause(); video.src=''; }
   // 刷新缩略图网格上的选中标记
   renderVoteGrid();
 }
@@ -1748,8 +1849,7 @@ function openNamingLightbox(workId){
   var lb = document.getElementById('naming-lightbox');
   var data = namingData[workId] || {};
 
-  // 设置图片
-  document.getElementById('nl-img').src = w.full;
+  openLightboxByWork(w, 'nl');
 
   // 清除之前的类
   lb.classList.remove('locked', 'has-names');
@@ -1787,6 +1887,8 @@ function openNamingLightbox(workId){
 function closeNamingLightbox(){
   document.getElementById('naming-lightbox').classList.remove('open');
   document.body.style.overflow='';
+  var video = document.getElementById('nl-video');
+  if(video){ video.pause(); video.src=''; }
   // 刷新网格状态
   if(document.getElementById('naming-view').classList.contains('open')){
     renderNamingGrid();
