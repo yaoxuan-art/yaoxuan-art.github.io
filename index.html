@@ -82,7 +82,7 @@
     background:var(--ink);margin-right:6px;vertical-align:middle;
     transition:background .25s;
   }
-  .nav .vote-btn.has-votes .vote-dot{background:#e76f51}
+  .nav .vote-btn.has-votes .vote-dot{background:var(--ink)}
 
   /* 主容器 */
   main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 28px calc(100px + env(safe-area-inset-bottom))}
@@ -244,7 +244,37 @@
     padding:80px 40px;cursor:zoom-out;
   }
   .lightbox.open{display:flex;animation:fadeIn .35s ease}
-  .lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;box-shadow:0 40px 80px -30px rgba(0,0,0,.8)}
+  .lightbox .lb-img-wrap{
+    position:relative;
+    max-width:100%;max-height:100%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .lightbox .lb-img-wrap img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;box-shadow:0 40px 80px -30px rgba(0,0,0,.8)}
+  .lightbox .watermark,
+  .vote-lightbox .watermark,
+  .naming-lightbox .watermark{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:3;
+    opacity:.18;
+    user-select:none;
+  }
+  .lightbox .watermark::before,
+  .vote-lightbox .watermark::before,
+  .naming-lightbox .watermark::before{
+    content:"yaoxuan.xin";
+    position:absolute;
+    top:50%;left:50%;
+    transform:translate(-50%,-50%) rotate(-30deg);
+    font-size:min(80px,12vw);
+    font-weight:700;
+    color:#fff;
+    letter-spacing:.1em;
+    white-space:nowrap;
+    text-shadow:0 0 30px rgba(0,0,0,.3);
+  }
   .lightbox .lb-close{
     position:absolute;top:24px;right:28px;
     width:44px;height:44px;border-radius:50%;
@@ -491,9 +521,9 @@
     flex-shrink:0;width:32px;text-align:center;
     font-size:18px;font-weight:700;color:var(--ink-3);
   }
-  .lb-item.top1 .lb-rank{color:#f4a261}
-  .lb-item.top2 .lb-rank{color:#e76f51}
-  .lb-item.top3 .lb-rank{color:#e9c46a}
+  .lb-item.top1 .lb-rank{color:#d0d0d8}
+  .lb-item.top2 .lb-rank{color:#c0c0c8}
+  .lb-item.top3 .lb-rank{color:#a0a0a8}
   .lb-item .lb-thumb{
     flex-shrink:0;width:48px;height:48px;border-radius:8px;overflow:hidden;
     background:var(--bg);
@@ -512,16 +542,16 @@
   }
   .lb-item .lb-bar-fill{
     height:100%;border-radius:2px;
-    background:linear-gradient(to right,#e76f51,#f4a261);
+    background:linear-gradient(to right,#a0a0a8,#d0d0d8);
     width:0%;transition:width 1s cubic-bezier(.2,.7,.3,1);
   }
   .lb-item .lb-votes{
     flex-shrink:0;font-size:13px;font-weight:600;color:var(--ink-2);
     min-width:36px;text-align:right;
   }
-  .lb-item.top1 .lb-votes{color:#f4a261}
-  .lb-item.top2 .lb-votes{color:#e76f51}
-  .lb-item.top3 .lb-votes{color:#e9c46a}
+  .lb-item.top1 .lb-votes{color:#d0d0d8}
+  .lb-item.top2 .lb-votes{color:#c0c0c8}
+  .lb-item.top3 .lb-votes{color:#a0a0a8}
   .lb-empty{
     text-align:center;padding:80px 20px;
     color:var(--ink-3);font-size:13px;
@@ -529,46 +559,22 @@
 
   /* ---------- 票数进度条 ---------- */
   .vote-progress{
-    position:fixed;bottom:0;left:0;right:0;z-index:140;
-    padding:14px 24px calc(14px + env(safe-area-inset-bottom));
-    background:linear-gradient(to top,var(--bg) 70%,rgba(10,10,11,.85),transparent);
-    display:flex;flex-direction:column;gap:8px;
-    transform:translateY(100%);
-    transition:transform .4s cubic-bezier(.2,.7,.3,1);
-  }
-  .vote-progress.show{transform:translateY(0)}
-  .vote-progress .vp-label{
-    display:flex;align-items:center;justify-content:space-between;
-    font-size:11px;color:var(--ink-3);letter-spacing:.04em;
-  }
-  .vote-progress .vp-label .vp-count{
-    color:var(--ink);font-weight:600;font-size:13px;
-  }
-  .vote-progress .vp-bar-outer{
-    width:100%;height:6px;border-radius:3px;
-    background:rgba(255,255,255,.08);
-    overflow:hidden;
-  }
-  .vote-progress .vp-bar-fill{
-    height:100%;border-radius:3px;
-    background:linear-gradient(to right,#e76f51,#f4a261);
-    width:0%;
-    transition:width 1.2s cubic-bezier(.2,.7,.3,1);
+    display:none;
   }
 
   /* ---------- 作品名征集 — Name 按钮 ---------- */
   .nav .name-btn{
     padding:6px 16px;border-radius:999px;
-    border:1px solid rgba(244,162,97,.35);
+    border:1px solid rgba(192,192,200,.35);
     font-size:12px;letter-spacing:.04em;
     transition:all .25s ease;
     white-space:nowrap;
-    background:linear-gradient(135deg,rgba(231,111,81,.08),rgba(244,162,97,.08));
-    color:#f4a261;
+    background:linear-gradient(135deg,rgba(160,160,168,.08),rgba(208,208,216,.08));
+    color:#c0c0c8;
   }
   .nav .name-btn:hover{
-    background:linear-gradient(135deg,rgba(231,111,81,.15),rgba(244,162,97,.15));
-    border-color:rgba(244,162,97,.6);color:#f4a261;
+    background:linear-gradient(135deg,rgba(160,160,168,.15),rgba(208,208,216,.15));
+    border-color:rgba(192,192,200,.6);color:#d0d0d8;
   }
 
   /* ---------- 作品名征集 — 规则页 ---------- */
@@ -605,7 +611,7 @@
     margin-bottom:4px;letter-spacing:.01em;
   }
   .naming-intro-body .subtitle{
-    font-size:12px;color:#f4a261;margin-bottom:32px;letter-spacing:.04em;
+    font-size:12px;color:#c0c0c8;margin-bottom:32px;letter-spacing:.04em;
   }
   .naming-intro-body .section-title{
     font-size:13px;color:var(--ink-2);font-weight:600;
@@ -623,7 +629,7 @@
     padding-left:16px;position:relative;
   }
   .naming-intro-body .reward-item::before{
-    content:"·";position:absolute;left:4px;color:#f4a261;
+    content:"·";position:absolute;left:4px;color:#c0c0c8;
   }
   .naming-intro-body .heart-text{
     font-size:13px;color:var(--ink-3);line-height:1.8;
@@ -632,7 +638,7 @@
   .naming-start-btn{
     display:block;margin:40px auto 0;
     padding:14px 44px;border-radius:999px;
-    background:linear-gradient(135deg,#e76f51,#f4a261);
+    background:linear-gradient(135deg,#a0a0a8,#d0d0d8);
     color:#0a0a0b;border:none;
     font-size:14px;font-weight:600;letter-spacing:.04em;
     cursor:pointer;font-family:inherit;
@@ -640,7 +646,7 @@
   }
   .naming-start-btn:hover{
     transform:translateY(-2px);
-    box-shadow:0 10px 30px -8px rgba(244,162,97,.3);
+    box-shadow:0 10px 30px -8px rgba(192,192,200,.25);
   }
   .naming-start-btn:active{transform:scale(.97)}
 
@@ -696,13 +702,13 @@
   .naming-thumb img{width:100%;height:100%;object-fit:cover;pointer-events:none}
   .naming-thumb.named::after{
     content:"";position:absolute;inset:0;
-    border:2px solid #f4a261;border-radius:8px;
+    border:2px solid #c0c0c8;border-radius:8px;
     pointer-events:none;
   }
   .naming-thumb .lock-badge{
     position:absolute;top:8px;right:8px;
     width:28px;height:28px;border-radius:50%;
-    background:rgba(0,0,0,.6);color:#f4a261;
+    background:rgba(0,0,0,.6);color:#c0c0c8;
     font-size:12px;display:none;
     align-items:center;justify-content:center;
     backdrop-filter:blur(4px);
@@ -756,7 +762,7 @@
   .naming-lightbox.locked .submit-section{display:none}
   .naming-lightbox.locked .names-wall{display:none}
   .adopted-section .adopted-name{
-    font-size:20px;font-weight:500;color:#f4a261;
+    font-size:20px;font-weight:500;color:#c0c0c8;
     letter-spacing:.02em;margin-bottom:4px;
   }
   .adopted-section .adopted-label{
@@ -786,10 +792,10 @@
     outline:none;transition:border-color .2s;
   }
   .submit-section input::placeholder{color:var(--ink-3)}
-  .submit-section input:focus{border-color:rgba(244,162,97,.4)}
+  .submit-section input:focus{border-color:rgba(192,192,200,.4)}
   .submit-section .submit-name-btn{
     padding:12px 28px;border-radius:10px;
-    background:linear-gradient(135deg,#e76f51,#f4a261);
+    background:linear-gradient(135deg,#a0a0a8,#d0d0d8);
     color:#0a0a0b;border:none;
     font-size:13px;font-weight:600;letter-spacing:.02em;
     cursor:pointer;font-family:inherit;
@@ -797,7 +803,7 @@
   }
   .submit-section .submit-name-btn:hover{
     transform:translateY(-1px);
-    box-shadow:0 6px 20px -6px rgba(244,162,97,.3);
+    box-shadow:0 6px 20px -6px rgba(192,192,200,.25);
   }
   .submit-section .submit-name-btn:disabled{
     opacity:.4;cursor:not-allowed;transform:none;
@@ -806,7 +812,7 @@
     font-size:10px;color:var(--ink-3);margin-top:4px;
   }
   .submit-section .already-named{
-    font-size:11px;color:#f4a261;margin-top:8px;display:none;
+    font-size:11px;color:#c0c0c8;margin-top:8px;display:none;
   }
   .submit-section.already .already-named{display:block}
   .submit-section.already input,
@@ -848,7 +854,7 @@
   .naming-thanks.open{display:flex;animation:fadeIn .3s ease}
   .naming-thanks-card{
     background:var(--bg-soft);
-    border:1px solid rgba(244,162,97,.2);
+    border:1px solid rgba(192,192,200,.2);
     border-radius:20px;
     padding:48px 40px;
     max-width:380px;width:calc(100% - 48px);
@@ -858,10 +864,10 @@
   }
   .naming-thanks-card .thanks-icon{
     width:56px;height:56px;border-radius:50%;
-    background:linear-gradient(135deg,rgba(231,111,81,.15),rgba(244,162,97,.15));
+    background:rgba(255,255,255,.08);
     display:flex;align-items:center;justify-content:center;
     margin:0 auto 20px;
-    font-size:26px;color:#f4a261;
+    font-size:26px;color:#c0c0c8;
   }
   .naming-thanks-card h3{
     font-size:18px;font-weight:500;margin-bottom:10px;letter-spacing:.01em;color:var(--ink);
@@ -870,7 +876,7 @@
     font-size:13px;color:var(--ink-2);line-height:1.7;
   }
   .naming-thanks-card .view-rules{
-    margin-top:16px;font-size:11px;color:#f4a261;
+    margin-top:16px;font-size:11px;color:#c0c0c8;
     cursor:pointer;text-decoration:none;
   }
   .naming-thanks-card .view-rules:hover{text-decoration:underline}
@@ -948,9 +954,11 @@
     <span class="en">Independent illustrator & visual artist</span>
   </div>
   <div class="nav-right">
+    <button class="name-btn" id="name-open-btn">✦ Name</button>
     <button class="vote-btn" id="vote-open-btn"><span class="vote-dot"></span>Vote</button>
     <button class="vote-btn" id="leaderboard-btn">Rank</button>
-    <button class="name-btn" id="name-open-btn">✦ Name</button>
+    <a href="#about">2026</a>
+  </div>
     <a href="#about">2026</a>
   </div>
 </nav>
@@ -1044,7 +1052,10 @@
 <!-- 原灯箱（首页笑脸大图） -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <div class="lb-close">✕</div>
-  <img id="lightbox-img" src="" alt="">
+  <div class="lb-img-wrap">
+    <img id="lightbox-img" src="" alt="">
+    <div class="watermark"></div>
+  </div>
 </div>
 
 <!-- ========== 投票全屏视图 ========== -->
@@ -1064,6 +1075,7 @@
   <button class="vl-close" id="vl-close">✕</button>
   <div class="vl-img-wrap">
     <img id="vl-img" src="" alt="">
+    <div class="watermark"></div>
     <div class="check-circle" id="check-circle">
       <span class="check-mark">✓</span>
       <span class="check-num"></span>
@@ -1154,6 +1166,7 @@
   <div class="nl-inner">
     <div class="nl-img-wrap">
       <img id="nl-img" src="" alt="">
+      <div class="watermark"></div>
     </div>
     <!-- 已采用名字展示（锁定状态） -->
     <div class="adopted-section" id="adopted-section">
