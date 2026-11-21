@@ -1041,7 +1041,7 @@
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <div class="lb-close">✕</div>
   <div class="lb-img-wrap">
-    <video id="lightbox-video" muted playsinline preload="auto" style="display:none"></video>
+    <video id="lightbox-video" muted playsinline webkit-playsinline preload="auto" style="display:none"></video>
     <img id="lightbox-img" src="" alt="">
     <div class="watermark"></div>
     <div class="anim-controls" id="lb-anim-controls" style="display:none">
@@ -1067,7 +1067,7 @@
 <div class="vote-lightbox" id="vote-lightbox">
   <button class="vl-close" id="vl-close">✕</button>
   <div class="vl-img-wrap">
-    <video id="vl-video" muted playsinline preload="auto" style="display:none"></video>
+    <video id="vl-video" muted playsinline webkit-playsinline preload="auto" style="display:none"></video>
     <img id="vl-img" src="" alt="">
     <div class="watermark"></div>
     <div class="anim-controls" id="vl-anim-controls" style="display:none">
@@ -1163,7 +1163,7 @@
   <button class="nl-close" id="nl-close">&#x2715;</button>
   <div class="nl-inner">
     <div class="nl-img-wrap">
-      <video id="nl-video" muted playsinline preload="auto" style="display:none"></video>
+      <video id="nl-video" muted playsinline webkit-playsinline preload="auto" style="display:none"></video>
       <img id="nl-img" src="" alt="">
       <div class="watermark"></div>
       <div class="anim-controls" id="nl-anim-controls" style="display:none">
@@ -1262,7 +1262,9 @@ function openWorkLightbox(workId){
     controls.style.display = 'none';
 
     var started = false;
+    var retried = false;
     function playAnim(){
+      if(started) return; // 防止重复触发
       img.style.display = 'none';
       video.style.display = 'block';
       controls.style.display = 'flex';
@@ -1270,12 +1272,23 @@ function openWorkLightbox(workId){
       replayBtn.style.display = 'none';
       started = true;
       video.muted = true;
+      video.volume = 0;
       video.currentTime = 0;
       var p = video.play();
-      if(p && p.then) p.catch(function(){
-        video.muted = true;
-        video.play().catch(function(){});
-      });
+      if(p && p.then){
+        p.then(function(){
+          // 播放成功
+        }).catch(function(){
+          if(retried) return;
+          retried = true;
+          // Chrome 桌面版有时需要延迟重试
+          setTimeout(function(){
+            video.muted = true;
+            video.volume = 0;
+            video.play().catch(function(){});
+          }, 300);
+        });
+      }
     }
     function showImage(){
       video.style.display = 'none';
@@ -1287,7 +1300,7 @@ function openWorkLightbox(workId){
     }
 
     skipBtn.onclick = function(e){ e.stopPropagation(); showImage(); };
-    replayBtn.onclick = function(e){ e.stopPropagation(); playAnim(); };
+    replayBtn.onclick = function(e){ e.stopPropagation(); started=false; retried=false; playAnim(); };
     video.onended = showImage;
     video.onerror = showImage;
 
@@ -1295,7 +1308,7 @@ function openWorkLightbox(workId){
     video.load();
     video.oncanplay = playAnim;
     video.onloadeddata = playAnim;
-    setTimeout(function(){ if(!started) showImage(); }, 2000);
+    setTimeout(function(){ if(!started) showImage(); }, 5000);
   }
 }
 
@@ -1436,7 +1449,9 @@ function openVoteLightbox(workId){
     video.style.display = 'none';
     controls.style.display = 'none';
     var started = false;
+    var retried = false;
     function playAnim(){
+      if(started) return;
       img.style.display = 'none';
       video.style.display = 'block';
       controls.style.display = 'flex';
@@ -1444,12 +1459,21 @@ function openVoteLightbox(workId){
       replayBtn.style.display = 'none';
       started = true;
       video.muted = true;
+      video.volume = 0;
       video.currentTime = 0;
       var p = video.play();
-      if(p && p.then) p.catch(function(){
-        video.muted = true;
-        video.play().catch(function(){});
-      });
+      if(p && p.then){
+        p.then(function(){
+        }).catch(function(){
+          if(retried) return;
+          retried = true;
+          setTimeout(function(){
+            video.muted = true;
+            video.volume = 0;
+            video.play().catch(function(){});
+          }, 300);
+        });
+      }
     }
     function showImage(){
       video.style.display = 'none';
@@ -1457,14 +1481,14 @@ function openVoteLightbox(workId){
       if(started){ skipBtn.style.display='none'; replayBtn.style.display='inline-block'; }
     }
     skipBtn.onclick = function(e){ e.stopPropagation(); showImage(); };
-    replayBtn.onclick = function(e){ e.stopPropagation(); playAnim(); };
+    replayBtn.onclick = function(e){ e.stopPropagation(); started=false; retried=false; playAnim(); };
     video.onended = showImage;
     video.onerror = showImage;
     video.src = w.anim;
     video.load();
     video.oncanplay = playAnim;
     video.onloadeddata = playAnim;
-    setTimeout(function(){ if(!started) showImage(); }, 2000);
+    setTimeout(function(){ if(!started) showImage(); }, 5000);
   }
   updateCheckCircle();
 }
@@ -1910,7 +1934,9 @@ function openNamingLightbox(workId){
     video.style.display = 'none';
     controls.style.display = 'none';
     var started = false;
+    var retried = false;
     function playAnim(){
+      if(started) return;
       img.style.display = 'none';
       video.style.display = 'block';
       controls.style.display = 'flex';
@@ -1918,12 +1944,21 @@ function openNamingLightbox(workId){
       replayBtn.style.display = 'none';
       started = true;
       video.muted = true;
+      video.volume = 0;
       video.currentTime = 0;
       var p = video.play();
-      if(p && p.then) p.catch(function(){
-        video.muted = true;
-        video.play().catch(function(){});
-      });
+      if(p && p.then){
+        p.then(function(){
+        }).catch(function(){
+          if(retried) return;
+          retried = true;
+          setTimeout(function(){
+            video.muted = true;
+            video.volume = 0;
+            video.play().catch(function(){});
+          }, 300);
+        });
+      }
     }
     function showImage(){
       video.style.display = 'none';
@@ -1931,14 +1966,14 @@ function openNamingLightbox(workId){
       if(started){ skipBtn.style.display='none'; replayBtn.style.display='inline-block'; }
     }
     skipBtn.onclick = function(e){ e.stopPropagation(); showImage(); };
-    replayBtn.onclick = function(e){ e.stopPropagation(); playAnim(); };
+    replayBtn.onclick = function(e){ e.stopPropagation(); started=false; retried=false; playAnim(); };
     video.onended = showImage;
     video.onerror = showImage;
     video.src = w.anim;
     video.load();
     video.oncanplay = playAnim;
     video.onloadeddata = playAnim;
-    setTimeout(function(){ if(!started) showImage(); }, 2000);
+    setTimeout(function(){ if(!started) showImage(); }, 5000);
   }
 
   // 清除之前的类
